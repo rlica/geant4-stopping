@@ -88,7 +88,7 @@ try:
     if angles:
         plt.figure(figsize=(8, 6))
         plt.plot(angles, xsecs, 'b-', linewidth=2)
-        plt.title("Angular Distribution ($d\sigma/d\Omega$)")
+        plt.title(r"Angular Distribution ($d\sigma/d\Omega$)")
         plt.xlabel(r"Center-of-Mass Angle $\theta_{CM}$ (degrees)")
         plt.ylabel("Cross Section (mb/sr)")
         plt.yscale('log')

@@ -1,0 +1,2 @@
+set(__QT_DEPLOY_TARGET_stopping_FILE /workspace/build/stopping)
+set(__QT_DEPLOY_TARGET_stopping_TYPE EXECUTABLE)

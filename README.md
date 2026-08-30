@@ -7,13 +7,37 @@ The primary objective is to simulate the primary beam's energy loss in a "thick"
 
 ## Quickstart
 
-### Prerequisites
+### Option A: Using Docker (Recommended for any OS / Apple Silicon / Linux / Windows)
+
+No local installation of Geant4 or compilation tools is required. Docker provides all dependencies, compilers, Geant4 datasets, and Python packages out of the box.
+
+1. **Run full simulation & analysis pipeline with one command:**
+   ```bash
+   ./run_docker.sh
+   # or explicitly with a specific macro:
+   ./run_docker.sh all ../run.mac
+   ```
+
+2. **Other convenient Docker commands:**
+   ```bash
+   ./run_docker.sh compile          # Compile C++ simulation inside Docker
+   ./run_docker.sh run ../30Si_run.mac # Run a specific macro
+   ./run_docker.sh plot             # Generate/update histogram plots
+   ./run_docker.sh bash             # Open an interactive shell inside Docker
+   ./run_docker.sh build-image      # Rebuild the Docker image
+   ```
+
+---
+
+### Option B: Native Build (Requires local Geant4)
+
+#### Prerequisites
 - **Geant4** (version 11.x or similar) with appropriate physics datasets.
 - **CMake** (version 3.16 or higher).
 - **Python 3** with `matplotlib` and `pandas` (for plotting results).
 
-### Building the Project
-To compile the simulation, you can use the provided bash script or build it manually using CMake.
+#### Building the Project
+To compile the simulation natively, you can use the provided bash script or build it manually using CMake.
 
 **Using the provided script:**
 ```bash
@@ -23,7 +47,7 @@ This script sets up the environment, builds the executable, runs the default mac
 
 **Manual Build:**
 ```bash
-mkdir build && cd build
+mkdir -p build && cd build
 cmake ..
 make -j4
 ```

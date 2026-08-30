@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/stopping.dir/link.d"
   "CMakeFiles/stopping.dir/DetectorConstruction.cc.o"
   "CMakeFiles/stopping.dir/DetectorConstruction.cc.o.d"
   "CMakeFiles/stopping.dir/PrimaryGeneratorAction.cc.o"

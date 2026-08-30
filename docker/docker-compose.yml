@@ -1,0 +1,12 @@
+services:
+  geant4-stopping:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: geant4-stopping:latest
+    container_name: geant4-stopping
+    volumes:
+      - ..:/workspace
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
