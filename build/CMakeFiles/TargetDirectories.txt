@@ -1,0 +1,3 @@
+/home/razvan/geant4-tests/geant4-stopping/build/CMakeFiles/stopping.dir
+/home/razvan/geant4-tests/geant4-stopping/build/CMakeFiles/edit_cache.dir
+/home/razvan/geant4-tests/geant4-stopping/build/CMakeFiles/rebuild_cache.dir

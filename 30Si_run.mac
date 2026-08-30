@@ -1,0 +1,31 @@
+# Macro file for geant4-stopping
+# Requires angular_distribution.txt file with Fresco calculation
+
+# 1. Build and set a custom stopping medium powder (e.g. 30Si with 1.5 g/cm3 density)
+/detector/customZ 14
+/detector/customA 30
+/detector/customDensity 1.25 g/cm3
+/detector/customSymbol Si
+
+/run/initialize
+
+# 2. Set thinTarget to false (this accurately simulates primary beam energy loss inside the target)
+#    Set thinTarget to true when using different stopping mediums
+/reaction/thinTarget true
+#/detector/targetMaterial G4_Ta
+
+# Standard reaction kinematics settings
+/reaction/targetZ 14
+/reaction/targetA 30
+/reaction/recoilZ 14
+/reaction/recoilA 32
+/reaction/ejectileZ 8
+/reaction/ejectileA 16
+
+/gun/particle ion
+/gun/ion 8 18
+# Set beam energy (e.g. 26 MeV)
+/gun/energy 26 MeV
+
+# Set the number of events to simulate
+/run/beamOn 10000

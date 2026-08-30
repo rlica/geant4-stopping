@@ -1,0 +1,25 @@
+# Macro file for geant4-stopping
+
+/run/initialize
+
+# To simulate a negligibly thin 30Si target with a DIFFERENT stopping medium (e.g. Titanium):
+# 1. Set thinTarget to true (this neglects primary beam energy loss and forces interaction at z=0)
+/reaction/thinTarget true
+# 2. Set the bulk material to act as the stopping medium for the recoils
+/detector/targetMaterial G4_Ti
+
+# Standard reaction kinematics settings
+/reaction/targetZ 14
+/reaction/targetA 30
+/reaction/recoilZ 14
+/reaction/recoilA 32
+/reaction/ejectileZ 8
+/reaction/ejectileA 16
+
+/gun/particle ion
+/gun/ion 8 18
+# Set beam energy (e.g. 26 MeV)
+/gun/energy 26 MeV
+
+# Set the number of events to simulate
+/run/beamOn 10000
