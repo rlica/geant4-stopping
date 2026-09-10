@@ -103,3 +103,7 @@ The simulation uses the standard `G4ParticleGun` to define the incoming beam.
 The primary generator relies on external ASCII data files to accurately sample reaction probabilities and kinematics. These should be present in the project's root folder (one level above the `build` directory):
 - `angular_distribution.txt`: Contains Center-of-Mass differential cross-sections ($d\sigma/d\Omega$) versus the scattering angle $\theta$ (in degrees). Often imported from FRESCO/DWBA outputs.
 - `cross_sections_18O_30Si_2n_Estar_5p5_6p5.txt` (or equivalent): Total cross-section data (in mb) versus beam energy (in MeV). This is vital for correctly weighting the interaction probability at different depths as the beam loses energy in a thick target.
+
+## Acknowledgments & Disclaimer
+
+This project was developed with the assistance of **Antigravity**, an agentic AI coding assistant developed by Google DeepMind.
