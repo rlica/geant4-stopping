@@ -9,7 +9,7 @@ The primary objective is to simulate the primary beam's energy loss in a "thick"
 
 ### Option A: Using Docker (Recommended for any OS / Apple Silicon / Linux / Windows)
 
-No local installation of Geant4 or compilation tools is required. Docker provides all dependencies, compilers, Geant4 datasets, and Python packages out of the box.
+No local installation of Geant4 or compilation tools is required, and **no image build is needed**: on first use, `run_docker.sh` automatically pulls the prebuilt, multi-architecture image (`ghcr.io/rlica/geant4-stopping:latest`) which contains Geant4, the compilers, all datasets, and the Python analysis packages. The image is cached locally, so subsequent runs start instantly.
 
 1. **Run full simulation & analysis pipeline with one command:**
    ```bash
@@ -24,8 +24,10 @@ No local installation of Geant4 or compilation tools is required. Docker provide
    ./run_docker.sh run ../30Si_run.mac # Run a specific macro
    ./run_docker.sh plot             # Generate/update histogram plots
    ./run_docker.sh bash             # Open an interactive shell inside Docker
-   ./run_docker.sh build-image      # Rebuild the Docker image
+   ./run_docker.sh build-image      # Maintainers: rebuild the image locally
    ```
+
+   If the prebuilt image cannot be pulled (e.g. offline), the script falls back to building the image locally from `docker/Dockerfile`.
 
 ---
 

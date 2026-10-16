@@ -1,0 +1,5 @@
+# CMake/build artifacts (regenerated inside the container by ./run_docker.sh)
+build/
+# Python
+__pycache__/
+*.pyc

@@ -3,31 +3,43 @@ set -e
 
 # Script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-IMAGE_NAME="geant4-stopping:latest"
+LOCAL_IMAGE="geant4-stopping:latest"
+REGISTRY_IMAGE="ghcr.io/rlica/geant4-stopping:latest"
+IMAGE_NAME="$LOCAL_IMAGE"
 
 # Ensure docker is available
 if ! command -v docker &> /dev/null; then
     echo "Error: 'docker' command not found. Please install and start Docker."
+    echo "Tip: run ./install_docker.sh to set Docker up automatically."
     exit 1
 fi
 
 # Function to build Docker image
 build_image() {
-    echo "==> Building Docker image '${IMAGE_NAME}'..."
-    docker build -t "${IMAGE_NAME}" -f "${SCRIPT_DIR}/docker/Dockerfile" "${SCRIPT_DIR}"
+    echo "==> Building Docker image '${LOCAL_IMAGE}'..."
+    docker build -t "${LOCAL_IMAGE}" -f "${SCRIPT_DIR}/docker/Dockerfile" "${SCRIPT_DIR}"
     echo "==> Docker image built successfully."
 }
 
-# Check if image exists, build if missing
-if [[ "$(docker images -q ${IMAGE_NAME} 2> /dev/null)" == "" ]]; then
-    echo "==> Docker image '${IMAGE_NAME}' not found locally."
-    build_image
-fi
-
-# Handle build-image command explicitly
+# Handle build-image command explicitly (maintainer path, skips pull)
 if [ "$1" == "build-image" ]; then
     build_image
     exit 0
+fi
+
+# Resolve which image to use, in order of preference:
+#   1. a local image already present        -> use it (fast, works offline)
+#   2. the prebuilt image published on GHCR -> pull it (normal user path)
+#   3. fallback                             -> build locally from ./docker
+if [[ "$(docker images -q ${LOCAL_IMAGE} 2> /dev/null)" != "" ]]; then
+    echo "==> Using existing local image '${LOCAL_IMAGE}'."
+elif docker pull "${REGISTRY_IMAGE}"; then
+    echo "==> Using prebuilt image '${REGISTRY_IMAGE}'."
+    IMAGE_NAME="${REGISTRY_IMAGE}"
+else
+    echo "==> Could not pull prebuilt image '${REGISTRY_IMAGE}'."
+    echo "    Building locally from ${SCRIPT_DIR}/docker/Dockerfile instead..."
+    build_image
 fi
 
 # If no arguments provided, show usage and default to full run
