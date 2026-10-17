@@ -62,6 +62,11 @@ else
     shift
 fi
 
+# Run the container as the host user so files it creates in the bind mount
+# (build/, CSVs, plots) are owned by you instead of root. HOME is redirected
+# to /tmp (world-writable) since the mapped uid has no passwd entry in the image.
+DOCKER_USER="--user $(id -u):$(id -g) -e HOME=/tmp"
+
 # Set interactive flags if terminal is attached
 DOCKER_FLAGS=""
 if [ -t 0 ] && [ -t 1 ]; then
@@ -74,4 +79,4 @@ fi
 docker run --rm ${DOCKER_FLAGS} \
     -v "${SCRIPT_DIR}:/workspace" \
     -w /workspace \
-    "${IMAGE_NAME}" "${ACTION}" "$@"
+    ${DOCKER_USER} "${IMAGE_NAME}" "${ACTION}" "$@"
