@@ -101,6 +101,11 @@ You can define a custom, homogeneous stopping medium without recompiling.
 
 *Note: The target is built dynamically using these properties. Changes must be executed before `/run/initialize`.*
 
+- `/detector/targetThickness <value> <unit>`: Set the full target thickness along the beam axis (e.g. `50 um`, `0.05 mm`). Default: 1 mm.
+- `/detector/targetArealDensity <value> mg/cm2`: Set the target thickness as an areal (mass) thickness; it is converted to a physical thickness using `/detector/customDensity` and overrides `targetThickness`.
+
+*Thin-target transmission mode:* if the thickness is small enough that recoils exit the target instead of stopping in it, the run summary additionally reports the number of transmitted recoils and their average energy and velocity (`v/c`) **before and after** the medium (forward exits only; backward exits are counted separately). The CSV gains the columns `RecoilInitBeta`, `ExitEnergy_MeV` and `ExitBeta`, where the exit energy/beta are **signed** (positive = forward exit, negative = backward exit), and `plot_histogram.py` produces an `exit_energy_histogram` showing both populations. For transmitted rows, `StoppingTime_ps` holds the time at which the recoil exits the target and `RecoilEnergy_MeV` its initial energy. A ready-made example is `thin_target.mac` (10 um layer). With the default (thick) target the output is unchanged.*
+
 #### 2. Reaction Kinematics
 - `/reaction/thinTarget <true/false>`: 
   - `false` (default): Simulates beam slowing down inside the target. The interaction depth is sampled using the beam's energy loss and external energy-dependent cross-sections.

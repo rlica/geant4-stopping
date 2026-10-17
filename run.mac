@@ -7,6 +7,10 @@
 /detector/customDensity 1.25 g/cm3
 /detector/customSymbol Si
 
+# Optional: thin stopping medium so recoils punch through. Must be set BEFORE /run/initialize.
+#/detector/targetThickness 50 um        # physical thickness (um, nm, mm, ...)
+#/detector/targetArealDensity 5 mg/cm2  # or areal density (converted with customDensity); overrides targetThickness
+
 /run/initialize
 
 # 2. Set thinTarget to false (this accurately simulates primary beam energy loss inside the target)

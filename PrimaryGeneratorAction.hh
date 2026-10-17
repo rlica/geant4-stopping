@@ -56,7 +56,8 @@ private:
     std::vector<G4double> fSigmaAtDepth;
     G4double fMaxSigma = 0.0;
     G4double fMaxDepth = 0.0;
-    G4double fTargetThickness; // initialized in .cc
+    G4double fTargetThickness; // initialized in .cc; synced from the Target geometry on first event
+    G4bool fGeometrySyncDone = false;
 };
 
 #endif

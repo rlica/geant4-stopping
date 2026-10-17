@@ -12,6 +12,7 @@
 #include "G4LogicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
+#include "G4Box.hh"
 #include <algorithm>
 
 PrimaryGeneratorAction::PrimaryGeneratorAction() {
@@ -238,6 +239,17 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     }
     fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., 1.));
     
+    // Sync the target thickness from the actual geometry (it may be set via
+    // /detector/targetThickness or /detector/targetArealDensity before /run/initialize).
+    if (!fGeometrySyncDone) {
+        G4LogicalVolume* targetLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Target", false);
+        if (targetLV) {
+            G4Box* solidTarget = dynamic_cast<G4Box*>(targetLV->GetSolid());
+            if (solidTarget) fTargetThickness = 2.0 * solidTarget->GetZHalfLength();
+        }
+        fGeometrySyncDone = true;
+    }
+
     if (!fIsThinTarget && !fIsInitialized) {
         InitializeSlowingDown();
     }

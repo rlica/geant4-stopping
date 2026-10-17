@@ -29,6 +29,14 @@ void DetectorConstruction::DefineCommands() {
     fMessenger->DeclareProperty("customA", fCustomA, "A of custom material");
     fMessenger->DeclarePropertyWithUnit("customDensity", "g/cm3", fCustomDensity, "Density of custom material");
     fMessenger->DeclareProperty("customSymbol", fCustomSymbol, "Chemical symbol of custom material");
+
+    // Full target thickness along the beam (z) axis. Must be set before /run/initialize.
+    fMessenger->DeclarePropertyWithUnit("targetThickness", "um", fTargetThickness,
+        "Full target thickness along z (um, mm, ...). Default 1 mm.");
+    // Areal density (mass thickness): converted to a physical thickness using the
+    // target density set via /detector/customDensity. Overrides targetThickness.
+    fMessenger->DeclarePropertyWithUnit("targetArealDensity", "mg/cm2", fTargetArealDensity,
+        "Target areal density in mg/cm2 (overrides targetThickness).");
 }
 
 void DetectorConstruction::SetTargetMaterial(const G4String& materialName) {
@@ -76,7 +84,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     G4LogicalVolume* logicWorld = new G4LogicalVolume(solidWorld, vacuum, "World");
     G4VPhysicalVolume* physWorld = new G4PVPlacement(0, G4ThreeVector(), logicWorld, "World", 0, false, 0, true);
 
-    G4Box* solidTarget = new G4Box("Target", 1*cm, 1*cm, 0.5*mm);
+    // If an areal density was requested, convert it to a physical thickness
+    // using the actual target density: t = (mass/area) / density.
+    if (fTargetArealDensity > 0.0) {
+        fTargetThickness = fTargetArealDensity / matTarget->GetDensity();
+    }
+
+    G4Box* solidTarget = new G4Box("Target", 1*cm, 1*cm, fTargetThickness / 2.0);
     fTargetLV = new G4LogicalVolume(solidTarget, matTarget, "Target");
     
     // Set step limits (e.g., 0.1 micrometer maximum step) to ensure accurate dE/dx integration

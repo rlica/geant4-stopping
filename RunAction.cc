@@ -21,6 +21,14 @@ RunAction::RunAction() : G4UserRunAction() {
     accumulableManager->RegisterAccumulable(fSumInteractionDepth);
     accumulableManager->RegisterAccumulable(fSumStoppingDepth);
     accumulableManager->RegisterAccumulable(fStopCount);
+    accumulableManager->RegisterAccumulable(fTransmitCount);
+    accumulableManager->RegisterAccumulable(fBackCount);
+    accumulableManager->RegisterAccumulable(fSumTInitE);
+    accumulableManager->RegisterAccumulable(fSumTInitE2);
+    accumulableManager->RegisterAccumulable(fSumTExitE);
+    accumulableManager->RegisterAccumulable(fSumTExitE2);
+    accumulableManager->RegisterAccumulable(fSumTInitBeta);
+    accumulableManager->RegisterAccumulable(fSumTExitBeta);
 
     auto analysisManager = G4AnalysisManager::Instance();
     analysisManager->SetDefaultFileType("csv");
@@ -29,6 +37,9 @@ RunAction::RunAction() : G4UserRunAction() {
     analysisManager->CreateNtuple("RecoilData", "Recoil Stopping Data");
     analysisManager->CreateNtupleDColumn("StoppingTime_ps");
     analysisManager->CreateNtupleDColumn("RecoilEnergy_MeV");
+    analysisManager->CreateNtupleDColumn("RecoilInitBeta");
+    analysisManager->CreateNtupleDColumn("ExitEnergy_MeV");
+    analysisManager->CreateNtupleDColumn("ExitBeta");
     analysisManager->FinishNtuple();
 }
 
@@ -49,6 +60,22 @@ void RunAction::AddStoppingData(G4double time, G4double initialEnergy, G4double 
     fStopCount += 1;
 }
 
+void RunAction::AddExitData(G4double initEnergy, G4double initBeta, G4double exitEnergy, G4double exitBeta, G4bool forward) {
+    if (forward) {
+        fTransmitCount += 1;
+        fSumTInitE += initEnergy;
+        fSumTInitE2 += initEnergy * initEnergy;
+        fSumTExitE += exitEnergy;
+        fSumTExitE2 += exitEnergy * exitEnergy;
+        fSumTInitBeta += initBeta;
+        fSumTExitBeta += exitBeta;
+    } else {
+        // Backward exits are recorded in the ntuple (negative energies) but do
+        // not enter the forward-transmitted averages.
+        fBackCount += 1;
+    }
+}
+
 void RunAction::EndOfRunAction(const G4Run* run) {
     auto analysisManager = G4AnalysisManager::Instance();
     analysisManager->Write();
@@ -57,17 +84,11 @@ void RunAction::EndOfRunAction(const G4Run* run) {
     G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
     accumulableManager->Merge();
 
-    G4int count = fStopCount.GetValue();
-    if (count > 0 && IsMaster()) {
-        G4double sum = fSumTime.GetValue();
-        G4double sum2 = fSumTime2.GetValue();
+    const G4int count = fStopCount.GetValue();
+    const G4int nForward = fTransmitCount.GetValue();
+    const G4int nBack = fBackCount.GetValue();
 
-        G4double mean = sum / count;
-        G4double variance = (sum2 / count) - (mean * mean);
-        if (variance < 0) variance = 0;
-        G4double stdDev = std::sqrt(variance);
-        G4double stdErr = stdDev / std::sqrt(count);
-
+    if ((count + nForward + nBack) > 0 && IsMaster()) {
         G4String particleName = "Unknown";
         G4double particleEnergy = 0.0;
         const PrimaryGeneratorAction* pga = dynamic_cast<const PrimaryGeneratorAction*>(G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction());
@@ -87,10 +108,6 @@ void RunAction::EndOfRunAction(const G4Run* run) {
             density = targetLV->GetMaterial()->GetDensity();
         }
 
-        G4double meanEnergy = fSumRecoilEnergy.GetValue() / count;
-        G4double meanInteractionDepth = fSumInteractionDepth.GetValue() / count;
-        G4double meanStoppingDepth = fSumStoppingDepth.GetValue() / count;
-
         G4cout << "\n=============================================" << G4endl;
         G4cout << "               Run Summary                   " << G4endl;
         G4cout << "=============================================" << G4endl;
@@ -101,13 +118,56 @@ void RunAction::EndOfRunAction(const G4Run* run) {
             G4cout << " Target Density:         " << density / (g/cm3) << " g/cm3" << G4endl;
         }
         G4cout << " Total number of events: " << run->GetNumberOfEvent() << G4endl;
-        G4cout << " Particles stopped:      " << count << G4endl;
-        G4cout << " Avg Recoil Init Energy: " << meanEnergy / MeV << " MeV" << G4endl;
-        G4cout << " Avg Interaction Depth:  " << meanInteractionDepth / um << " um" << G4endl;
-        G4cout << " Avg Stopping Depth:     " << meanStoppingDepth / um << " um" << G4endl;
-        G4cout << " Average stopping time:  " << mean / ps << " ps" << G4endl;
-        G4cout << " Standard Deviation:     " << stdDev / ps << " ps" << G4endl;
-        G4cout << " Error Bar (Std Error):  " << stdErr / ps << " ps" << G4endl;
+
+        if (count > 0) {
+            G4double sum = fSumTime.GetValue();
+            G4double sum2 = fSumTime2.GetValue();
+
+            G4double mean = sum / count;
+            G4double variance = (sum2 / count) - (mean * mean);
+            if (variance < 0) variance = 0;
+            G4double stdDev = std::sqrt(variance);
+            G4double stdErr = stdDev / std::sqrt(count);
+
+            G4double meanEnergy = fSumRecoilEnergy.GetValue() / count;
+            G4double meanInteractionDepth = fSumInteractionDepth.GetValue() / count;
+            G4double meanStoppingDepth = fSumStoppingDepth.GetValue() / count;
+
+            G4cout << " Particles stopped:      " << count << G4endl;
+            G4cout << " Avg Recoil Init Energy: " << meanEnergy / MeV << " MeV" << G4endl;
+            G4cout << " Avg Interaction Depth:  " << meanInteractionDepth / um << " um" << G4endl;
+            G4cout << " Avg Stopping Depth:     " << meanStoppingDepth / um << " um" << G4endl;
+            G4cout << " Average stopping time:  " << mean / ps << " ps" << G4endl;
+            G4cout << " Standard Deviation:     " << stdDev / ps << " ps" << G4endl;
+            G4cout << " Error Bar (Std Error):  " << stdErr / ps << " ps" << G4endl;
+        }
+
+        if (nForward > 0) {
+            const G4int n = nForward;
+            const G4int total = count + nForward + nBack;
+
+            const G4double meanInitE = fSumTInitE.GetValue() / n;
+            const G4double meanInitE2 = fSumTInitE2.GetValue() / n;
+            G4double varInitE = meanInitE2 - meanInitE * meanInitE;
+            if (varInitE < 0) varInitE = 0;
+            const G4double meanExitE = fSumTExitE.GetValue() / n;
+            const G4double meanExitE2 = fSumTExitE2.GetValue() / n;
+            G4double varExitE = meanExitE2 - meanExitE * meanExitE;
+            if (varExitE < 0) varExitE = 0;
+            const G4double meanInitBeta = fSumTInitBeta.GetValue() / n;
+            const G4double meanExitBeta = fSumTExitBeta.GetValue() / n;
+
+            G4cout << " Particles transmitted:  " << n << " of " << total << " (forward exits)";
+            if (nBack > 0) {
+                G4cout << ", " << nBack << " (backward exits)";
+            }
+            G4cout << G4endl;
+            G4cout << " Avg Recoil Energy before medium: " << meanInitE / MeV << " MeV  (v/c = " << meanInitBeta << ")" << G4endl;
+            G4cout << " Avg Recoil Energy after medium:  " << meanExitE / MeV << " MeV  (v/c = " << meanExitBeta << ")" << G4endl;
+            G4cout << " Avg Recoil Energy Loss:          " << (meanInitE - meanExitE) / MeV << " MeV" << G4endl;
+            G4cout << " StdDev Recoil Energy after:      " << std::sqrt(varExitE) / MeV << " MeV" << G4endl;
+            G4cout << " StdErr Recoil Energy after:      " << std::sqrt(varExitE / n) / MeV << " MeV" << G4endl;
+        }
         G4cout << "=============================================\n" << G4endl;
     }
 }

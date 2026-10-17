@@ -130,3 +130,45 @@ try:
         print(f"Successfully saved 18O energy vs depth plot (pdf, png)")
 except FileNotFoundError:
     print(f"Note: 18O_energy_vs_depth.txt not found, skipping this plot.")
+
+# 5. Exit Energy Distribution (signed: forward exit +, backward exit -)
+try:
+    exit_energies = []
+    with open(filename, "r") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if not row or row[0].startswith("#"):
+                continue
+            try:
+                val = float(row[3])
+                if val != 0.0:
+                    exit_energies.append(val)
+            except (ValueError, IndexError):
+                continue
+
+    if exit_energies:
+        counts_x, bin_edges_x = np.histogram(exit_energies, bins=bins)
+        bin_centers_x = (bin_edges_x[:-1] + bin_edges_x[1:]) / 2
+
+        ascii_filename_x = "exit_energy_histogram.txt"
+        with open(ascii_filename_x, "w") as f:
+            f.write("# BinCenter(MeV) Counts\n")
+            for center, count in zip(bin_centers_x, counts_x):
+                f.write(f"{center:.6f} {count}\n")
+
+        plt.figure(figsize=(8, 6))
+        plt.hist(exit_energies, bins=bins, color="mediumseagreen", edgecolor="black")
+        plt.axvline(0.0, color="black", linestyle="--", linewidth=1)
+        plt.title("32Si Recoil Exit Energy Distribution")
+        plt.xlabel("Exit Energy (MeV)  (negative = backward exit)")
+        plt.ylabel("Counts")
+        plt.grid(axis="y", alpha=0.75)
+        plt.tight_layout()
+        plt.savefig("exit_energy_histogram.pdf")
+        plt.savefig("exit_energy_histogram.png")
+        plt.close()
+        print(f"Successfully saved exit energy histogram (txt, pdf, png)")
+    else:
+        print("No transmitted recoils found; exit energy histogram skipped.")
+except FileNotFoundError:
+    pass

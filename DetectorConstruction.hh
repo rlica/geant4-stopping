@@ -25,6 +25,13 @@ private:
     G4int fCustomA = 30;
     G4double fCustomDensity = 1.5;
     G4String fCustomSymbol = "Si";
+
+    // Full target thickness along z, in G4 internal length units (1.0 = 1 mm).
+    // Settable via /detector/targetThickness or /detector/targetArealDensity.
+    G4double fTargetThickness = 1.0;
+    // Areal density in internal units (set in mg/cm2 via macro). 0 = not set.
+    // When > 0 it overrides fTargetThickness (converted using the target density).
+    G4double fTargetArealDensity = 0.0;
 };
 
 #endif
