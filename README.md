@@ -11,14 +11,20 @@ The primary objective is to simulate the primary beam's energy loss in a "thick"
 
 No local installation of Geant4 or compilation tools is required, and **no image build is needed**: on first use, `run_docker.sh` automatically pulls the prebuilt, multi-architecture image (`ghcr.io/rlica/geant4-stopping:latest`) which contains Geant4, the compilers, all datasets, and the Python analysis packages. The image is cached locally, so subsequent runs start instantly.
 
-1. **Run full simulation & analysis pipeline with one command:**
+1. **One-time prerequisite: install Docker** (skip if `docker --version` already works):
+   ```bash
+   ./install_docker.sh
+   ```
+   Then open a **new terminal** (or run `newgrp docker` on Linux) so the group change takes effect.
+
+2. **Run full simulation & analysis pipeline with one command:**
    ```bash
    ./run_docker.sh
    # or explicitly with a specific macro:
    ./run_docker.sh all ../run.mac
    ```
 
-2. **Other convenient Docker commands:**
+3. **Other convenient Docker commands:**
    ```bash
    ./run_docker.sh compile          # Compile C++ simulation inside Docker
    ./run_docker.sh run ../30Si_run.mac # Run a specific macro
@@ -28,6 +34,15 @@ No local installation of Geant4 or compilation tools is required, and **no image
    ```
 
    If the prebuilt image cannot be pulled (e.g. offline), the script falls back to building the image locally from `docker/Dockerfile`.
+
+#### Troubleshooting Docker runs
+
+- **`./run_docker.sh compile` fails with `Could NOT find ZLIB` / `Could NOT find EXPAT`** (or any CMake configure error) right after cloning or updating the repo: your cached local `geant4-stopping:latest` image was built from an older Dockerfile and is stale. Rebuild it once and retry:
+   ```bash
+   ./run_docker.sh build-image
+   ```
+- **`docker` command not found:** run `./install_docker.sh` first. On Linux it adds your user to the `docker` group, which only takes effect in a new terminal (or after `newgrp docker`).
+- **Apple Silicon / ARM Macs and Intel/AMD PCs are both supported:** the prebuilt GHCR image is multi-architecture, and `./run_docker.sh build-image` natively builds for the local architecture.
 
 ---
 

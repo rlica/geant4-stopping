@@ -7,7 +7,7 @@
 # `./run_docker.sh` pipeline before re-tagging a release.
 
 # condaforge/miniforge3:latest as of 2026-10 (linux/amd64 manifest)
-FROM condaforge/miniforge3@sha256:f752860f77bd417aa4db35be3d2e906fdb740fb80f40755ed651
+FROM condaforge/miniforge3@sha256:f752860f77bd417aa4db35be3d2e906fdb740fb80f40755ed651fff9e8873aad
 
 LABEL maintainer="Razvan Lica <razvan.lica@cern.ch>"
 LABEL description="Geant4 Stopping Simulation environment with Geant4, CMake, C++ compilers, and Python plotting dependencies"
@@ -27,14 +27,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Geant4, compilation toolchain, and Python analysis packages via conda-forge
-# NOTE: `expat` and `zlib` are installed explicitly: Geant4's CMake config needs
-# their development files (headers + .so symlinks), but conda-forge splits these
-# into runtime-only packages (libexpat, libzlib) that geant4 pulls in by itself.
-# Geant4's core config depends on exactly these two external libraries.
 RUN mamba install -y -c conda-forge \
     geant4=11.4.3 \
-    expat \
-    zlib \
     cmake \
     make \
     cxx-compiler \
@@ -43,6 +37,20 @@ RUN mamba install -y -c conda-forge \
     numpy \
     matplotlib \
     pandas \
+    && mamba clean -afy
+
+# Install expat/zlib development files in a SEPARATE transaction.
+# Geant4 CMake config does find_dependency(EXPAT) and find_dependency(ZLIB),
+# which needs headers (zlib.h) and dev symlinks (libz.so); conda-forge splits
+# these into runtime-only packages (libexpat, libzlib) that geant4 pulls in.
+# IMPORTANT: when requested in the same transaction as the packages above, the
+# solver silently substitutes the zlib request with zlib-ng (which provides the
+# zlib virtual but ships no headers), so the dev files never land in the image
+# and find_package(Geant4) fails. Installing them in their own transaction
+# reliably links the real zlib/expat packages.
+RUN mamba install -y -c conda-forge \
+    expat \
+    zlib \
     && mamba clean -afy
 
 # Make CMake search the conda prefix for find_package (Geant4, EXPAT, ...)
