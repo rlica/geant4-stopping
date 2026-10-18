@@ -18,6 +18,8 @@ public:
 
     const G4ParticleGun* GetParticleGun() const { return fParticleGun; }
 
+    G4bool IsThinTarget() const { return fIsThinTarget; }
+
     G4int GetRecoilZ() const { return fRecoilZ; }
     G4int GetRecoilA() const { return fRecoilA; }
 

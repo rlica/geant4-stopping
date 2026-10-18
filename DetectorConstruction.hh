@@ -2,6 +2,7 @@
 #define DetectorConstruction_h 1
 
 #include "G4VUserDetectorConstruction.hh"
+#include "globals.hh"
 
 class G4VPhysicalVolume;
 class G4GenericMessenger;
@@ -32,6 +33,10 @@ private:
     // Areal density in internal units (set in mg/cm2 via macro). 0 = not set.
     // When > 0 it overrides fTargetThickness (converted using the target density).
     G4double fTargetArealDensity = 0.0;
+
+    // Material requested via /detector/targetMaterial before /run/initialize
+    // (fTargetLV does not exist yet at that point). Applied in Construct().
+    G4String fRequestedTargetMaterial = "";
 };
 
 #endif

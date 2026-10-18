@@ -104,7 +104,7 @@ Data recorded per event includes:
 - `StoppingTime_ps`: The total time taken for the recoil to stop (in picoseconds).
 - `RecoilEnergy_MeV`: The initial kinetic energy of the recoil (in MeV) right after the transfer reaction.
 
-Additional scripts (like `plot_histogram.py`) can parse this CSV to produce histograms. Additionally, at the end of every run, the simulation prints a detailed summary to the standard output containing the mean stopping times, interaction depths, standard deviations, and standard errors.
+Additional scripts (like `plot_histogram.py`) can parse this CSV to produce histograms. Additionally, at the end of every run, the simulation prints a detailed summary to the standard output containing the mean stopping times, interaction depths, standard deviations, and standard errors. The summary also reports the stopping medium ("stopper") information: the material, density, physical thickness and areal density of the layer in which the recoils are stopped, along with the stopping mode (in thin-target mode the simulated layer acts as the stopper/backing; in thick-target mode the reaction target itself is the stopping medium).
 
 ### Macro Commands Reference
 The physical target and reaction kinematics are highly configurable via custom UI commands, typically defined in your reaction's macro file (e.g. `reactions/o18_si30_2n/macros/si30_backing.mac`).

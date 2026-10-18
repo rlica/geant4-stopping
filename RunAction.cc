@@ -12,6 +12,7 @@
 #include "G4LogicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
+#include "G4Box.hh"
 
 RunAction::RunAction() : G4UserRunAction() {
     G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
@@ -102,11 +103,16 @@ void RunAction::EndOfRunAction(const G4Run* run) {
 
         G4String materialName = "Unknown";
         G4double density = 0.0;
+        G4double thickness = 0.0; // full layer thickness along z
         G4LogicalVolume* targetLV = G4LogicalVolumeStore::GetInstance()->GetVolume("Target", false);
         if (targetLV && targetLV->GetMaterial()) {
             materialName = targetLV->GetMaterial()->GetName();
             density = targetLV->GetMaterial()->GetDensity();
+            if (auto* solidTarget = dynamic_cast<G4Box*>(targetLV->GetSolid())) {
+                thickness = 2.0 * solidTarget->GetZHalfLength();
+            }
         }
+        const G4bool thinTarget = pga && pga->IsThinTarget();
 
         G4cout << "\n=============================================" << G4endl;
         G4cout << "               Run Summary                   " << G4endl;
@@ -116,6 +122,22 @@ void RunAction::EndOfRunAction(const G4Run* run) {
         G4cout << " Target Material:        " << materialName << G4endl;
         if (density > 0) {
             G4cout << " Target Density:         " << density / (g/cm3) << " g/cm3" << G4endl;
+        }
+        G4cout << " Stopping Mode:          " << (thinTarget
+            ? "thin target (simulated layer acts as stopper/backing)"
+            : "thick target (target is also the stopping medium)") << G4endl;
+        G4cout << " Stopper Material:       " << materialName << G4endl;
+        if (density > 0) {
+            G4cout << " Stopper Density:        " << density / (g/cm3) << " g/cm3" << G4endl;
+        }
+        if (thickness > 0) {
+            const G4double thicknessUm = thickness / um;
+            G4cout << " Stopper Thickness:      " << thicknessUm << " um" << G4endl;
+            if (density > 0) {
+                // areal density [mg/cm2] = rho [g/cm3] * t [um] / 10
+                G4cout << " Stopper Areal Density:  "
+                       << (density / (g/cm3)) * thicknessUm / 10.0 << " mg/cm2" << G4endl;
+            }
         }
         G4cout << " Total number of events: " << run->GetNumberOfEvent() << G4endl;
 

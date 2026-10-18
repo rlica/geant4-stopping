@@ -40,15 +40,20 @@ void DetectorConstruction::DefineCommands() {
 }
 
 void DetectorConstruction::SetTargetMaterial(const G4String& materialName) {
-    G4NistManager* nist = G4NistManager::Instance();
-    G4Material* mat = nist->FindOrBuildMaterial(materialName);
-    
-    if (!mat) {
-        G4cerr << "Material " << materialName << " not found!" << G4endl;
-        return;
-    }
-    
+    // Remember the request and apply it immediately if the geometry already
+    // exists; otherwise Construct() applies it after building the target
+    // (macros typically set /detector/targetMaterial before /run/initialize).
+    fRequestedTargetMaterial = materialName;
+
     if (fTargetLV) {
+        G4NistManager* nist = G4NistManager::Instance();
+        G4Material* mat = nist->FindOrBuildMaterial(materialName);
+
+        if (!mat) {
+            G4cerr << "Material " << materialName << " not found!" << G4endl;
+            return;
+        }
+
         fTargetLV->SetMaterial(mat);
         G4RunManager::GetRunManager()->PhysicsHasBeenModified();
     }
@@ -84,14 +89,31 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     G4LogicalVolume* logicWorld = new G4LogicalVolume(solidWorld, vacuum, "World");
     G4VPhysicalVolume* physWorld = new G4PVPlacement(0, G4ThreeVector(), logicWorld, "World", 0, false, 0, true);
 
+    // Resolve the final target material: a material requested via
+    // /detector/targetMaterial (e.g. a backing/stopper such as G4_Ta)
+    // overrides the custom material. This must happen BEFORE the
+    // areal-density-to-thickness conversion below, which uses the density
+    // of the final material.
+    G4Material* matFinal = matTarget;
+    if (!fRequestedTargetMaterial.empty()) {
+        G4Material* requested = nist->FindOrBuildMaterial(fRequestedTargetMaterial);
+        if (requested) {
+            matFinal = requested;
+        } else {
+            G4cerr << "Material " << fRequestedTargetMaterial << " not found; keeping "
+                   << matTarget->GetName() << G4endl;
+        }
+        fRequestedTargetMaterial = "";
+    }
+
     // If an areal density was requested, convert it to a physical thickness
     // using the actual target density: t = (mass/area) / density.
     if (fTargetArealDensity > 0.0) {
-        fTargetThickness = fTargetArealDensity / matTarget->GetDensity();
+        fTargetThickness = fTargetArealDensity / matFinal->GetDensity();
     }
 
     G4Box* solidTarget = new G4Box("Target", 1*cm, 1*cm, fTargetThickness / 2.0);
-    fTargetLV = new G4LogicalVolume(solidTarget, matTarget, "Target");
+    fTargetLV = new G4LogicalVolume(solidTarget, matFinal, "Target");
     
     // Set step limits (e.g., 0.1 micrometer maximum step) to ensure accurate dE/dx integration
     fTargetLV->SetUserLimits(new G4UserLimits(0.1 * um));
