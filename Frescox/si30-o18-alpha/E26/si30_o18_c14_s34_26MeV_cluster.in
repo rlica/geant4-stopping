@@ -1,0 +1,164 @@
+30Si(18O,14C)34S*(0+, Ex=4.916 MeV) alpha transfer at 26 MeV
+NAMELIST
+
+ &FRESCO hcm=0.05 rmatch=45.0 rintp=0.20 hnl=0.10
+  rnl=10.0 centre=0.0
+  jtmin=0.0 jtmax=80.0 absend=-1.0
+  thmin=0.0 thmax=180.0 thinc=0.25
+  iter=1 nnu=48 chans=1 xstabl=1 elab=26.0 /
+
+ !================================================================
+ ! PARTITIONS AND STATES
+ !================================================================
+
+ ! Entrance channel:
+ !   18O(0+) + 30Si(0+)
+ &PARTITION namep='o18' massp=18.0 zp=8
+  namet='si30' masst=30.0 zt=14 nex=1 /
+
+ &STATES jp=0.0 bandp=1 ep=0.0 cpot=1
+  jt=0.0 bandt=1 et=0.0 /
+
+ ! Exit channel:
+ !   14C(0+) + 34S*(0+, Ex=4.916 MeV)
+ !
+ ! qval is the ground-state-to-ground-state reaction Q value.
+ ! The excitation energy is specified separately using et=4.916.
+ &PARTITION namep='c14' massp=14.0 zp=6
+  namet='s34' masst=34.0 zt=16
+  qval=1.696 nex=1 /
+
+ &STATES jp=0.0 bandp=1 ep=0.0 cpot=2
+  jt=0.0 bandt=1 et=4.916 /
+
+ &PARTITION /
+
+ !================================================================
+ ! OPTICAL AND BINDING POTENTIALS
+ !================================================================
+
+ ! Entrance optical potential:
+ !   18O + 30Si
+ !
+ ! These are placeholder Woods-Saxon parameters carried over
+ ! from the original calculation. Replace with your preferred
+ ! entrance-channel optical model.
+ &POT kp=1 ap=18.0 at=30.0 rc=1.20 /
+
+ &POT kp=1 type=1
+  p1=50.0 p2=1.17 p3=0.65
+  p4=25.0 p5=1.17 p6=0.70 /
+
+ ! Exit optical potential:
+ !   14C + 34S
+ !
+ ! These are placeholder parameters, not a fitted 14C+34S
+ ! optical potential.
+ &POT kp=2 ap=14.0 at=34.0 rc=1.20 /
+
+ &POT kp=2 type=1
+  p1=50.0 p2=1.17 p3=0.65
+  p4=25.0 p5=1.17 p6=0.70 /
+
+ ! Initial alpha binding potential:
+ !   18O = 14C + alpha
+ !
+ ! Required binding energy:
+ !   S_alpha(18O) approximately 6.228 MeV
+ !
+ ! The depth p1 is only a starting value. FRESCO should adjust
+ ! the real depth to reproduce the specified binding energy.
+ &POT kp=3 ap=4.0 at=14.0 rc=1.25 /
+
+ &POT kp=3 type=1
+  p1=100.0 p2=1.25 p3=0.65 /
+
+ ! Final alpha binding potential:
+ !   34S*(Ex=4.916) = 30Si + alpha
+ !
+ ! Effective binding energy:
+ !   S_alpha(34S) - Ex
+ !   = 7.924 - 4.916
+ !   = approximately 3.008 MeV
+ &POT kp=4 ap=4.0 at=30.0 rc=1.25 /
+
+ &POT kp=4 type=1
+  p1=100.0 p2=1.25 p3=0.65 /
+
+ ! Core-core/remnant potential:
+ !   14C + 30Si
+ !
+ ! Cluster-transfer identification:
+ !   a = 18O
+ !   b = 14C
+ !   x = alpha
+ !   A = 30Si
+ !   B = 34S
+ !
+ ! Thus, the core-core interaction is 14C + 30Si.
+ &POT kp=5 ap=14.0 at=30.0 rc=1.20 /
+
+ &POT kp=5 type=1
+  p1=50.0 p2=1.17 p3=0.65
+  p4=25.0 p5=1.17 p6=0.70 /
+
+ &POT /
+
+ !================================================================
+ ! ALPHA-CLUSTER OVERLAPS
+ !================================================================
+
+ ! Initial overlap:
+ !   18O(0+) = 14C(0+) + alpha
+ !
+ ! For the simplified 0+ cluster configuration:
+ !   alpha spin          sn = 0
+ !   relative orbital l     = 0
+ !   total overlap j        = 0
+ !
+ ! nn=1 is only a starter value. The correct node number should
+ ! be chosen consistently with the alpha-cluster model or the
+ ! Wildermuth condition.
+ &OVERLAP kn1=1 ic1=1 ic2=2 in=1 kind=0
+  nn=1 l=0 sn=0.0 j=0.0
+  kbpot=3 be=6.228 isc=1 ipc=0 /
+
+ ! Final overlap:
+ !   34S*(0+, Ex=4.916) = 30Si(0+) + alpha
+ !
+ ! Since the populated state is 0+, use l=0 and j=0 in this
+ ! direct alpha-cluster model.
+ !
+ ! Final effective alpha binding energy:
+ !   be = 7.924 - 4.916 = 3.008 MeV
+ &OVERLAP kn1=2 ic1=2 ic2=1 in=2 kind=3
+  nn=1 l=0 sn=0.0 j=0.0
+  ia=1 ib=1
+  kbpot=4 be=3.008 isc=1 ipc=0 /
+
+ &OVERLAP /
+
+ !================================================================
+ ! FINITE-RANGE ALPHA-TRANSFER COUPLING
+ !================================================================
+
+ ! Post-form, finite-range, one-step alpha transfer.
+ !
+ ! iter=1 in the FRESCO namelist gives a one-step DWBA
+ ! calculation.
+ !
+ ! ip3=5 selects the core-core/remnant potential.
+ &COUPLING icto=-2 icfrom=1 kind=7
+  ip1=0 ip2=-1 ip3=5 /
+
+ ! Initial projectile overlap:
+ !   18O -> 14C + alpha
+ &CFP in=1 ib=1 ia=1 kn=1 a=1.0 /
+
+ ! Final residual overlap:
+ !   34S*(0+, 4.916 MeV) -> 30Si + alpha
+ &CFP in=2 ib=1 ia=1 kn=2 a=1.0 /
+
+ &CFP /
+ &COUPLING /
+

@@ -1,0 +1,12 @@
+*.o
+*.mod
+intel*
+i386
+gfortran*
+arm64*
+*.aux
+*.log
+*.synctex.gz
+fort.*
+frxy-svn-copy
+fort89tokind0
