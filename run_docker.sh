@@ -47,16 +47,31 @@ if [ $# -eq 0 ]; then
     echo "Usage: ./run_docker.sh [command] [options]"
     echo ""
     echo "Commands:"
-    echo "  all [macro]       Build, run simulation, and plot (default macro: ../run.mac)"
+    echo "  all [macro]       Build, run simulation, and plot"
     echo "  compile           Compile the C++ simulation"
     echo "  run [macro]       Run the simulation with specified macro"
-    echo "  plot              Generate Python histograms/plots"
+    echo "  plot [case]       Generate Python histograms/plots (optionally for reactions/<case>)"
     echo "  bash              Open interactive shell inside container"
     echo "  build-image       Rebuild the Docker image"
     echo "  <cmd>             Run any custom command inside the container"
     echo ""
-    echo "==> Executing default workflow: all ../run.mac"
-    ACTION="all"
+    echo "Reaction macros (one per target backing, one folder per reaction):"
+    for m in "${SCRIPT_DIR}"/reactions/*/macros/*.mac; do
+        [ -e "$m" ] && echo "  ${m#"${SCRIPT_DIR}"/}"
+    done
+    DEFAULT_MACRO="$(ls "${SCRIPT_DIR}"/reactions/*/macros/*.mac 2>/dev/null | head -1)"
+    DEFAULT_MACRO="${DEFAULT_MACRO#"${SCRIPT_DIR}"/}"
+    if [ -n "$DEFAULT_MACRO" ]; then
+        echo ""
+        echo "==> Executing default workflow: all $DEFAULT_MACRO"
+        ACTION="all"
+        set -- "$DEFAULT_MACRO"
+    else
+        echo ""
+        echo "==> No reaction macros found under reactions/*/macros/."
+        echo "    Executing default workflow: compile"
+        ACTION="compile"
+    fi
 else
     ACTION="$1"
     shift

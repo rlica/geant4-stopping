@@ -1,0 +1,64 @@
+----------------------------------------------------------------------------
+
+                                  GRAZING_9 
+ 
+----------------------------------------------------------------------------
+ The program GRAZING_9 is subdivided in 5-LEGS from 0 to 4. Depending on the
+ kind of calculation you want to perform  choose one of them. In short:
+
+ LEG.0 - Gives only general informations (independent of r)
+
+ LEG.1 - Calculates cross section summed over N and Z and integrated over
+         excitation energy (E*) and angular momentum L (partial wave). 
+         Usefull leg to calculate fusion cross sections (excitation functions).
+
+ LEG.2 - Calculates N and Z distributions integrated over energy loss (E*)
+         and angular momentum L (partial wave). (if you want the distributions
+         corrected for evaporation use leg.4 below). 
+         This leg is also usefull for the calculation of barrier distribution.
+
+ LEG.3 - Calculates distributions in excitation energy (E*) summed over
+         all N and Z and integrated over all angular momentum L (partial wave).
+
+ LEG.4 - Calculates distribution in excitation energy (E*) for each N and Z 
+         integrated over all angular momentum L (partial wave). 
+         The distributions are corrected for evaporation.
+
+
+-----------------------------------------------------------------------------
+         Important files produced by GRAZING_9 (usefull for plotting).
+-----------------------------------------------------------------------------
+
+  6 - output on the screen
+
+ 10 - Store the input data to facilitate the re-run of the code
+ 11 - for barrier distributions
+ 12 - for fusion excitation functions and related cross-sections.
+ 16 - E_loss distribution P(E_loss). In distriin-s.f (when iout=1)
+ 19 - Population of single particle states
+
+ 20 - output from leg_1 or leg_2
+ 21 -
+ .. -
+
+ 33 - Z-distribution after evaporation. In enzcor_s.f (when iout=1) 
+ 34 - From evap_s.f
+
+ 43 - Energy distribution for ejectile and/or recoil from leg41new_s.com
+ 44 - Energy distribution for ejectile and/or recoil from leg42new_s.com
+
+ 70 - Information of trajectories In capturenew_s (produced when itab=1)
+ 71 - Information of trajectories In capturenew_s (produced when itab=1)
+ 77 - Wilshinski plot (summed over N and Z)
+
+ 81 - Wilshinski plot for a given channel.
+
+ 91 - total cross section from leg2new.f
+ 92 - dsigma/dZ from leg2new_s.f
+ 93 - d2sigma/dZ/dN from leg2new_s.f
+ 95 - total cross section distribution from leg3new_s.f
+ 97 - to produce e command file relevant only for VMS.
+ 98 - like unit 6 but richer
+
+-----------------------------------------------------------------------------
+

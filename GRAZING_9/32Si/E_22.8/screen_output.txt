@@ -1,0 +1,912 @@
+  This output generated on : 4-Jun-2026  at 15:07
+
+
+ This program calculates distributions in masses, charges,
+  energies and angular momenta of fragments in collisions 
+  between heavy nuclei according to a semiclassical model with
+  average parameters for formfactors, level densities, etc.
+ The trajectory is calculated using the Akyuz potential
+
+
+ You are running the UNIX version of the program.
+  Output are stored in numbered files.
+  Write OK if this is OK
+  Your input is stored in FOR10 file for rerun
+
+ Enter projectile charge and mass numbers Z_a, A_a (integers)
+  and target charge and mass numbers Z_A and A_A (integers):
+  Projectile is 18O  , Target is 30Si 
+ Projectile charge and mass no. Za =  8 , Aa =  18
+ Target charge and mass no. ZA = 14 , AA =  30
+
+ If you want to run calculation with standard parameters
+ enter: s for standard.
+ If you want to change parameters enter: c for change.
+ If you only want to change the accuracy enter: a for accuracy.
+ If you have regrets enter: e for exit.
+
+ Standard accuracy is .0001. You may change this by
+   entering new overall accuracy < .01
+ Overall accuracy = 0.1E-04
+
+ Besides the standard output, you may want additional output
+  or a record of various parameters and variables
+  in the FOR098.DAT      file. They are specified later
+   Enter yes if you want this.
+ You may also choose various special options
+   Enter opt if you want this.
+ If you want both: Enter both. If you want neither: Enter no
+
+ You must include inelastic scattering due to collective modes.
+  in order to obtain realistic estimates for close collisions
+  and for total cross sections
+ The low-lying modes are crucial, giant normally unimportant
+ You have four options:
+  Enter 1 if only low-lying modes
+  Enter 2 if both low-lying and high-lying (giant) modes
+  Enter 0 if only high-lying (giant) modes
+  Enter -1 if no inelastic modes.
+  Q-value for neutron stripping =   -1.46 MeV
+  Q-value for neutron pick-up =     -6.65 MeV
+  Q-value for proton stripping =    -8.64 MeV
+  Q-value for proton pick-up =      -5.51 MeV
+ Q-values used: qns,qnp,qps,qpp =  2.598 -2.598 -1.566  1.566 MeV
+ You are neglecting giant resonances
+ Collective states for 18O  
+ Energy =  1.982 MeV   BE2 =   0.451E-02 e^2 b^2
+ Energy =  5.098 MeV   BE3 =   0.112E-02 e^2 b^3
+ Collective states for 30Si 
+ Energy =  2.236 MeV   BE2 =   0.215E-01 e^2 b^2
+ Energy =  5.448 MeV   BE3 =   0.227E-02 e^2 b^3
+
+ General information for low energy (zeta=1)
+ Height of nominal Coulomb barrier =   16.75 MeV
+ Radius of nominal Coulomb barrier =  8.94 fm
+ Critical energy =   57.50 MeV, where there is no nominal barrier
+ Corresponding critical angular momentum =   37.37 hbar
+   and critical radius =  6.99 fm
+ Sum of nuclear half-density radii =  6.17 fm
+
+ Enter center of mass energy in MeV.
+  If you know the laboratory energy or lab energy per nucleon
+  you may first enter 0. Exit by negative number.
+
+ Enter laboratory bombarding energy in MeV.
+  If you know laboratory energy per nucleon enter 0.
+  If you want to repeat the energy input enter -1
+ E_lab =   22.8  MeV
+ E_cm =   14.3 Mev
+
+   18O   + 30Si  at   22.8 Mev lab. Date: 4-Jun-2026  at 15:07
+  Q-values as difference between Fermi levels
+  General r-independent information
+ Mean field reduction factor zeta = 1.030
+  Energy below barrier
+   Turning point for central collisions =11.29 fm
+  Excitation energy of fused system 48Ti  is  37.52 MeV
+   Threshhold for neutron evaporation =  11.63 MeV
+   Barrier for proton evaporation =  15.57 MeV
+  Calculating capture angular momentum
+  calculated eta for emc =    16.480602311374099     
+  Energy too low for capture
+  CPU time for capture=    0.02 sec.
+  No classical capture at this low energy
+  Lowest capture energy =  16.48 MeV at l=0
+   with capture distance =  9.42 fm
+ Shift of radius to make capture at this energy = 0.1182 fm
+  Radius for this barrier =  9.0973 fm
+  Inverse barrier frequency =  3.0756 MeV
+
+ Calculating barrier distribution (probbar_s)
+  Total number of steps in probbar_s =          12
+ 1. estimate for capture cross section =  0.17107114D-02 mb
+ time for probbar_s =    0.00 sec.
+
+ You now specify which kind of job you want performed.
+ There are 8 types of jobs (legs):
+ 0. Only general information (independent of r)
+ 1. Sum over N and Z and integrated over E* and transferred L
+ 2. N and Z distribution  integrated over E* and transferred L 
+       (cannot include evaporation: If so use 4)
+ 3. E* distributions, summed over N and Z and integrated over L
+ 4. E* distributions for each N and Z, integrated over L
+ 5. L distributions summed over N and Z and integrated over E*
+ 6. L distributions for each N and Z and integrated over E*
+ 7. Distributions in E* and transferred L summed over N and Z
+ 8. Distributions in E* and transferred L for each N and Z
+ Of these 8 types the first 4 are implemented in various ways
+  specified later. Enter which type you want:(exit on leg<0)
+ Total cross sections are calculated with stepwidth =0.112 fm
+  Prepares total cross sections by calculating
+   Capture probability at l = 0 is    0.0146464
+   Height of barrier  =   16.7127033
+   Mean height of barrier for scattering =   16.7167740
+  lgraz^2 =   -9.4812365980653507E-010  lgraz put = 0
+   Radius for this barrier =  8.9577 fm
+   Corresponding radiusshift vdral = -0.0009 fm
+   Turning point for scattering at l = 0 is    11.290890689922094     
+ Suggested step in l: delal =    2.000
+
+ calculating for l =    0.000 for preparation:
+
+  Energy below barrier(for l=0)
+   Turning point for central collisions =11.29 fm
+  rturn below barrier in alofr
+ Surface distance increased by  0.0431 fm
+
+ If excitation functions wanted
+  Enter step in laboratory energy decm>0 and Elab_max,
+  or dele<0 and Elab_min.        If not enter 0 0
+  prima di transm_s
+  dopo di transm_s
+  pplim  ==   1.0000000000000000E-004
+  ppscat ==  0.98535356933624429     
+  al ==   2.0000000000000000     
+  al,delal,nndl ===   2.0000000000000000        2.0000000000000000                1
+
+ Do you want results in the laboratory system?
+ Enter: lab (for laboratory), cm (for center of mass),
+        both (for both systems)(not always implemented)
+
+     For l =    2.0000000
+       Capture probability =    0.0122345
+       Mean barrier for scattering =   16.8087492
+       Mean shift in barrier for scattering =    0.0033985
+       Actual turning point =    11.338590793441357     
+  Energy below barrier(for l=0)
+   Turning point for central collisions =11.29 fm
+ Surface distance increased by  0.0421 fm
+ Warning: Sumcheck wid2e =   0.1002 wid2etr =   0.1002
+ You have the following choices:
+ 1. Distribution in mass and charge of ejectiles or recoils
+       corrected for actual masses
+ 2. Distribution in mass and charge of ejectiles or recoils
+       after evaporation
+ 3. Distribution in excitation energy of ejectiles or recoil
+       for selected N and Z, numerically (uncorrected)
+ 4. Distribution in total kinetic energy for each partition
+ 5. Table for plotting the total kinetic energy
+       versus A of the ejectile
+ Enter your choice: (exit on 0)
+
+
+ You have decided to calculate total cross sections
+  for selected partitions as functions of total kinetic energy
+  i.e. cross sections integrated over angles
+  (and integrated over transferred L)
+ Stepwidth in r is delr =  0.112 fm
+ You may obtain a table to make a Wilczynski plot
+  for each partition (to be specified later)
+ Answer yes or no
+ You may also obtain the results for each trajectory
+ stored in grazing_out.dat file. Enter yes, or no if not.
+ Besides the energy distribution (edist)
+  You may calculate, and display for each r, variables from
+  the following list (in paranthesis their significance):
+ mavdis (mean ang. momentum loss for given energy loss)
+ scatang (mean scattering angle for given energy loss)
+ dsigde (double differential cross section)
+ Enter name of variable, no if no more
+
+ You must now specify the values of delta N and delta Z
+  (of the ejectile) for which you want the energy distribution
+ In order to decide you might want to see the five largest
+  cross sections, yes or no!
+ Now, first enter number of cases to be calculated
+ Enter  1. selected delta N and delta Z (iselectn,iselectz)
+
+ You may calculate the energy distributions with a finite
+  energy resolution tres(FWHM) and cut-off.
+  The cut-off may be negative (default = -20MeV)
+ Enter tres and ecut in MeV (0,-20 if not)
+ Energy distributions are calculated with resolution =   1.000
+  and cut-off in kinetic energy loss -15.000
+  Calculating for r =   11.34 fm
+    distribution in energy for deln =  -2 and delz =   0
+  Total probability in nztdis_s inaccurate
+   integral probability =  0.999635
+  Spread - wide in nztdis_s inaccurate
+   spread =  1.706744 ,   wide =  1.701045
+     for r = 11.3385908
+  Warning: Total probability in edistapp inaccurate
+  integral probability =  0.999116
+  Warning: Mean energy - eav in edistapp inaccurate
+   Mean energy =  6.482093 , eav =  6.485586
+  Warning: Spread - wide in edistapp inaccurate
+  Spread =  1.713980 , wide =  1.701045
+      for r =    11.338590793441357     
+ eloss =   -0.150 ppe = 0.00000 ppapp = 0.00000
+ eloss =    0.000 ppe = 0.00001 ppapp = 0.00000
+ eloss =    0.150 ppe = 0.00002 ppapp = 0.00000
+ eloss =    0.300 ppe = 0.00003 ppapp = 0.00000
+ eloss =    0.450 ppe = 0.00006 ppapp = 0.00000
+ eloss =    0.600 ppe = 0.00011 ppapp = 0.00000
+ eloss =    0.900 ppe = 0.00032 ppapp = 0.00001
+ eloss =    1.200 ppe = 0.00077 ppapp = 0.00006
+ eloss =    1.500 ppe = 0.00170 ppapp = 0.00022
+ eloss =    1.800 ppe = 0.00340 ppapp = 0.00071
+ eloss =    2.400 ppe = 0.01091 ppapp = 0.00472
+ eloss =    3.000 ppe = 0.02758 ppapp = 0.01915
+ eloss =    3.600 ppe = 0.05721 ppapp = 0.05274
+ eloss =    4.200 ppe = 0.10013 ppapp = 0.10674
+ eloss =    4.800 ppe = 0.15064 ppapp = 0.16883
+ eloss =    5.400 ppe = 0.19726 ppapp = 0.21863
+ eloss =    6.000 ppe = 0.22689 ppapp = 0.24016
+ eloss =    6.600 ppe = 0.23072 ppapp = 0.23000
+ eloss =    7.800 ppe = 0.16778 ppapp = 0.15164
+ eloss =    9.000 ppe = 0.07779 ppapp = 0.07097
+ eloss =   10.200 ppe = 0.02334 ppapp = 0.02559
+ eloss =   11.400 ppe = 0.00458 ppapp = 0.00752
+ eloss =   12.600 ppe = 0.00059 ppapp = 0.00187
+ eloss =   13.800 ppe = 0.00005 ppapp = 0.00041
+ eloss =   15.000 ppe = 0.00000 ppapp = 0.00008
+ eloss =   16.200 ppe = 0.00000 ppapp = 0.00001
+ eloss =   18.600 ppe = 0.00000 ppapp = 0.00000
+ eloss =   21.000 ppe = 0.00000 ppapp = 0.00000
+  calculating mean angular momentum for each energy
+  calculating scattering angle for each energy
+  Warning: diminished accuracy in scatangleavx_s
+ CPU time for  1. energy distribution =   0.14 sec.
+   You ordered  1 distributions
+
+     For l =    4.0000000
+       Capture probability =    0.0071089
+       Mean barrier for scattering =   17.0862380
+       Mean shift in barrier for scattering =    0.0019725
+       Actual turning point =    11.478697752302516     
+  Energy below barrier(for l=0)
+   Turning point for central collisions =11.29 fm
+ Surface distance increased by  0.0416 fm
+  Calculating for r =   11.48 fm
+    distribution in energy for deln =  -2 and delz =   0
+  Total probability in nztdis_s inaccurate
+   integral probability =  0.999683
+  Spread - wide in nztdis_s inaccurate
+   spread =  1.722592 ,   wide =  1.717694
+     for r = 11.4786978
+  Warning: Total probability in edistapp inaccurate
+  integral probability =  0.999160
+  Warning: Mean energy - eav in edistapp inaccurate
+   Mean energy =  6.514718 , eav =  6.517889
+  Warning: Spread - wide in edistapp inaccurate
+  Spread =  1.729940 , wide =  1.717694
+      for r =    11.478697752302516     
+ eloss =   -0.150 ppe = 0.00000 ppapp = 0.00000
+ eloss =    0.000 ppe = 0.00001 ppapp = 0.00000
+ eloss =    0.150 ppe = 0.00002 ppapp = 0.00000
+ eloss =    0.300 ppe = 0.00004 ppapp = 0.00000
+ eloss =    0.450 ppe = 0.00007 ppapp = 0.00000
+ eloss =    0.600 ppe = 0.00012 ppapp = 0.00000
+ eloss =    0.900 ppe = 0.00032 ppapp = 0.00001
+ eloss =    1.200 ppe = 0.00079 ppapp = 0.00006
+ eloss =    1.500 ppe = 0.00171 ppapp = 0.00022
+ eloss =    1.800 ppe = 0.00342 ppapp = 0.00071
+ eloss =    2.400 ppe = 0.01089 ppapp = 0.00470
+ eloss =    3.000 ppe = 0.02734 ppapp = 0.01893
+ eloss =    3.600 ppe = 0.05643 ppapp = 0.05187
+ eloss =    4.200 ppe = 0.09849 ppapp = 0.10480
+ eloss =    4.800 ppe = 0.14803 ppapp = 0.16588
+ eloss =    5.400 ppe = 0.19406 ppapp = 0.21540
+ eloss =    6.000 ppe = 0.22393 ppapp = 0.23768
+ eloss =    6.600 ppe = 0.22893 ppapp = 0.22901
+ eloss =    7.800 ppe = 0.16938 ppapp = 0.15341
+ eloss =    9.000 ppe = 0.08062 ppapp = 0.07324
+ eloss =   10.200 ppe = 0.02506 ppapp = 0.02702
+ eloss =   11.400 ppe = 0.00514 ppapp = 0.00815
+ eloss =   12.600 ppe = 0.00070 ppapp = 0.00209
+ eloss =   13.800 ppe = 0.00006 ppapp = 0.00047
+ eloss =   15.000 ppe = 0.00000 ppapp = 0.00009
+ eloss =   16.200 ppe = 0.00000 ppapp = 0.00002
+ eloss =   18.600 ppe = 0.00000 ppapp = 0.00000
+ eloss =   21.000 ppe = 0.00000 ppapp = 0.00000
+  calculating mean angular momentum for each energy
+  calculating scattering angle for each energy
+  Warning: diminished accuracy in scatangleavx_s
+ CPU time for  1. energy distribution =   0.14 sec.
+   You ordered  1 distributions
+
+     For l =    6.0000000
+       Capture probability =    0.0028584
+       Mean barrier for scattering =   17.5531117
+       Mean shift in barrier for scattering =    0.0007924
+       Actual turning point =    11.703367926237952     
+  Energy below barrier(for l=0)
+   Turning point for central collisions =11.29 fm
+ Surface distance increased by  0.0448 fm
+  Calculating for r =   11.70 fm
+    distribution in energy for deln =  -2 and delz =   0
+  Total probability in nztdis_s inaccurate
+   integral probability =  0.999741
+  Mean energy - eav in nztdis_s inaccurate
+   mean energy =  6.563830  eav =  6.562295
+  Spread - wide in nztdis_s inaccurate
+   spread =  1.744119 ,   wide =  1.740207
+     for r = 11.7033679
+  Warning: Total probability in edistapp inaccurate
+  integral probability =  0.999219
+  Warning: Mean energy - eav in edistapp inaccurate
+   Mean energy =  6.559550 , eav =  6.562295
+  Warning: Spread - wide in edistapp inaccurate
+  Spread =  1.751548 , wide =  1.740207
+      for r =    11.703367926237952     
+ eloss =   -0.150 ppe = 0.00000 ppapp = 0.00000
+ eloss =    0.000 ppe = 0.00001 ppapp = 0.00000
+ eloss =    0.150 ppe = 0.00002 ppapp = 0.00000
+ eloss =    0.300 ppe = 0.00004 ppapp = 0.00000
+ eloss =    0.450 ppe = 0.00007 ppapp = 0.00000
+ eloss =    0.600 ppe = 0.00012 ppapp = 0.00000
+ eloss =    0.900 ppe = 0.00033 ppapp = 0.00001
+ eloss =    1.200 ppe = 0.00080 ppapp = 0.00006
+ eloss =    1.500 ppe = 0.00174 ppapp = 0.00023
+ eloss =    1.800 ppe = 0.00344 ppapp = 0.00072
+ eloss =    2.400 ppe = 0.01085 ppapp = 0.00466
+ eloss =    3.000 ppe = 0.02699 ppapp = 0.01860
+ eloss =    3.600 ppe = 0.05538 ppapp = 0.05069
+ eloss =    4.200 ppe = 0.09629 ppapp = 0.10220
+ eloss =    4.800 ppe = 0.14455 ppapp = 0.16193
+ eloss =    5.400 ppe = 0.18980 ppapp = 0.21106
+ eloss =    6.000 ppe = 0.21995 ppapp = 0.23431
+ eloss =    6.600 ppe = 0.22645 ppapp = 0.22759
+ eloss =    7.800 ppe = 0.17139 ppapp = 0.15570
+ eloss =    9.000 ppe = 0.08443 ppapp = 0.07631
+ eloss =   10.200 ppe = 0.02749 ppapp = 0.02902
+ eloss =   11.400 ppe = 0.00597 ppapp = 0.00904
+ eloss =   12.600 ppe = 0.00087 ppapp = 0.00240
+ eloss =   13.800 ppe = 0.00009 ppapp = 0.00056
+ eloss =   15.000 ppe = 0.00001 ppapp = 0.00012
+ eloss =   16.200 ppe = 0.00000 ppapp = 0.00002
+ eloss =   18.600 ppe = 0.00000 ppapp = 0.00000
+ eloss =   21.000 ppe = 0.00000 ppapp = 0.00000
+  calculating mean angular momentum for each energy
+  calculating scattering angle for each energy
+  Warning: diminished accuracy in scatangleavx_s
+ CPU time for  1. energy distribution =   0.14 sec.
+   You ordered  1 distributions
+
+     For l =    8.0000000
+       Capture probability =    0.0007938
+       Mean barrier for scattering =   18.2143745
+       Mean shift in barrier for scattering =    0.0002200
+       Actual turning point =    12.002357454764619     
+  Energy below barrier(for l=0)
+   Turning point for central collisions =11.29 fm
+ Surface distance increased by  0.0387 fm
+  Calculating for r =   12.00 fm
+    distribution in energy for deln =  -2 and delz =   0
+  Total probability in nztdis_s inaccurate
+   integral probability =  0.999796
+  Mean energy - eav in nztdis_s inaccurate
+   mean energy =  6.611417  eav =  6.609649
+  Spread - wide in nztdis_s inaccurate
+   spread =  1.766674 ,   wide =  1.763687
+     for r = 12.0023575
+  Warning: Total probability in edistapp inaccurate
+  integral probability =  0.999277
+  Warning: Mean energy - eav in edistapp inaccurate
+   Mean energy =  6.607321 , eav =  6.609649
+  Warning: Spread - wide in edistapp inaccurate
+  Spread =  1.774118 , wide =  1.763687
+      for r =    12.002357454764619     
+ eloss =   -0.150 ppe = 0.00000 ppapp = 0.00000
+ eloss =    0.000 ppe = 0.00001 ppapp = 0.00000
+ eloss =    0.150 ppe = 0.00002 ppapp = 0.00000
+ eloss =    0.300 ppe = 0.00004 ppapp = 0.00000
+ eloss =    0.450 ppe = 0.00007 ppapp = 0.00000
+ eloss =    0.600 ppe = 0.00012 ppapp = 0.00000
+ eloss =    0.900 ppe = 0.00034 ppapp = 0.00001
+ eloss =    1.200 ppe = 0.00082 ppapp = 0.00006
+ eloss =    1.500 ppe = 0.00176 ppapp = 0.00023
+ eloss =    1.800 ppe = 0.00346 ppapp = 0.00072
+ eloss =    2.400 ppe = 0.01079 ppapp = 0.00461
+ eloss =    3.000 ppe = 0.02661 ppapp = 0.01824
+ eloss =    3.600 ppe = 0.05425 ppapp = 0.04943
+ eloss =    4.200 ppe = 0.09399 ppapp = 0.09948
+ eloss =    4.800 ppe = 0.14097 ppapp = 0.15783
+ eloss =    5.400 ppe = 0.18541 ppapp = 0.20656
+ eloss =    6.000 ppe = 0.21581 ppapp = 0.23078
+ eloss =    6.600 ppe = 0.22379 ppapp = 0.22603
+ eloss =    7.800 ppe = 0.17330 ppapp = 0.15798
+ eloss =    9.000 ppe = 0.08836 ppapp = 0.07951
+ eloss =   10.200 ppe = 0.03013 ppapp = 0.03117
+ eloss =   11.400 ppe = 0.00694 ppapp = 0.01005
+ eloss =   12.600 ppe = 0.00109 ppapp = 0.00277
+ eloss =   13.800 ppe = 0.00012 ppapp = 0.00067
+ eloss =   15.000 ppe = 0.00001 ppapp = 0.00015
+ eloss =   16.200 ppe = 0.00000 ppapp = 0.00003
+ eloss =   18.600 ppe = 0.00000 ppapp = 0.00000
+ eloss =   21.000 ppe = 0.00000 ppapp = 0.00000
+  calculating mean angular momentum for each energy
+  calculating scattering angle for each energy
+  Warning: diminished accuracy in scatangleavx_s
+ CPU time for  1. energy distribution =   0.13 sec.
+   You ordered  1 distributions
+
+     For l =   10.0000000
+       Capture probability =    0.0001524
+       Mean barrier for scattering =   19.0760434
+       Mean shift in barrier for scattering =    0.0000422
+       Actual turning point =    12.365109610075324     
+  Energy below barrier(for l=0)
+   Turning point for central collisions =11.29 fm
+ Surface distance increased by  0.0411 fm
+  Calculating for r =   12.37 fm
+    distribution in energy for deln =  -2 and delz =   0
+  Total probability in nztdis_s inaccurate
+   integral probability =  0.999841
+  Mean energy - eav in nztdis_s inaccurate
+   mean energy =  6.655410  eav =  6.653462
+  Spread - wide in nztdis_s inaccurate
+   spread =  1.787118 ,   wide =  1.784883
+     for r = 12.3651096
+  Warning: Total probability in edistapp inaccurate
+  integral probability =  0.999328
+  Warning: Mean energy - eav in edistapp inaccurate
+   Mean energy =  6.651495 , eav =  6.653462
+  Warning: Spread - wide in edistapp inaccurate
+  Spread =  1.794523 , wide =  1.784883
+      for r =    12.365109610075324     
+ eloss =   -0.150 ppe = 0.00000 ppapp = 0.00000
+ eloss =    0.000 ppe = 0.00001 ppapp = 0.00000
+ eloss =    0.150 ppe = 0.00002 ppapp = 0.00000
+ eloss =    0.300 ppe = 0.00004 ppapp = 0.00000
+ eloss =    0.450 ppe = 0.00007 ppapp = 0.00000
+ eloss =    0.600 ppe = 0.00013 ppapp = 0.00000
+ eloss =    0.900 ppe = 0.00035 ppapp = 0.00001
+ eloss =    1.200 ppe = 0.00083 ppapp = 0.00006
+ eloss =    1.500 ppe = 0.00177 ppapp = 0.00023
+ eloss =    1.800 ppe = 0.00347 ppapp = 0.00072
+ eloss =    2.400 ppe = 0.01071 ppapp = 0.00456
+ eloss =    3.000 ppe = 0.02623 ppapp = 0.01788
+ eloss =    3.600 ppe = 0.05321 ppapp = 0.04826
+ eloss =    4.200 ppe = 0.09192 ppapp = 0.09701
+ eloss =    4.800 ppe = 0.13777 ppapp = 0.15416
+ eloss =    5.400 ppe = 0.18150 ppapp = 0.20252
+ eloss =    6.000 ppe = 0.21210 ppapp = 0.22757
+ eloss =    6.600 ppe = 0.22134 ppapp = 0.22455
+ eloss =    7.800 ppe = 0.17487 ppapp = 0.15995
+ eloss =    9.000 ppe = 0.09188 ppapp = 0.08239
+ eloss =   10.200 ppe = 0.03261 ppapp = 0.03317
+ eloss =   11.400 ppe = 0.00790 ppapp = 0.01101
+ eloss =   12.600 ppe = 0.00132 ppapp = 0.00313
+ eloss =   13.800 ppe = 0.00015 ppapp = 0.00078
+ eloss =   15.000 ppe = 0.00001 ppapp = 0.00018
+ eloss =   16.200 ppe = 0.00000 ppapp = 0.00004
+ eloss =   18.600 ppe = 0.00000 ppapp = 0.00000
+ eloss =   21.000 ppe = 0.00000 ppapp = 0.00000
+  calculating mean angular momentum for each energy
+  calculating scattering angle for each energy
+  Warning: diminished accuracy in scatangleavx_s
+ CPU time for  1. energy distribution =   0.13 sec.
+   You ordered  1 distributions
+
+     For l =   12.0000000
+       Capture probability =    0.0000203
+       Mean barrier for scattering =   20.1454753
+       Mean shift in barrier for scattering =    0.0000056
+       Actual turning point =    12.781820442621813     
+  Energy below barrier(for l=0)
+   Turning point for central collisions =11.29 fm
+ Surface distance increased by  0.0347 fm
+  Calculating for r =   12.78 fm
+    distribution in energy for deln =  -2 and delz =   0
+  Total probability in nztdis_s inaccurate
+   integral probability =  0.999874
+  Mean energy - eav in nztdis_s inaccurate
+   mean energy =  6.691849  eav =  6.689773
+  Spread - wide in nztdis_s inaccurate
+   spread =  1.803615 ,   wide =  1.801940
+     for r = 12.7818204
+  Warning: Total probability in edistapp inaccurate
+  integral probability =  0.999369
+  Warning: Mean energy - eav in edistapp inaccurate
+   Mean energy =  6.688086 , eav =  6.689773
+  Warning: Spread - wide in edistapp inaccurate
+  Spread =  1.810959 , wide =  1.801940
+      for r =    12.781820442621813     
+ eloss =   -0.150 ppe = 0.00000 ppapp = 0.00000
+ eloss =    0.000 ppe = 0.00001 ppapp = 0.00000
+ eloss =    0.150 ppe = 0.00002 ppapp = 0.00000
+ eloss =    0.300 ppe = 0.00004 ppapp = 0.00000
+ eloss =    0.450 ppe = 0.00007 ppapp = 0.00000
+ eloss =    0.600 ppe = 0.00013 ppapp = 0.00000
+ eloss =    0.900 ppe = 0.00035 ppapp = 0.00001
+ eloss =    1.200 ppe = 0.00083 ppapp = 0.00006
+ eloss =    1.500 ppe = 0.00178 ppapp = 0.00023
+ eloss =    1.800 ppe = 0.00347 ppapp = 0.00072
+ eloss =    2.400 ppe = 0.01063 ppapp = 0.00451
+ eloss =    3.000 ppe = 0.02590 ppapp = 0.01757
+ eloss =    3.600 ppe = 0.05234 ppapp = 0.04728
+ eloss =    4.200 ppe = 0.09023 ppapp = 0.09499
+ eloss =    4.800 ppe = 0.13519 ppapp = 0.15118
+ eloss =    5.400 ppe = 0.17835 ppapp = 0.19925
+ eloss =    6.000 ppe = 0.20910 ppapp = 0.22496
+ eloss =    6.600 ppe = 0.21933 ppapp = 0.22331
+ eloss =    7.800 ppe = 0.17605 ppapp = 0.16150
+ eloss =    9.000 ppe = 0.09471 ppapp = 0.08474
+ eloss =   10.200 ppe = 0.03469 ppapp = 0.03484
+ eloss =   11.400 ppe = 0.00874 ppapp = 0.01183
+ eloss =   12.600 ppe = 0.00153 ppapp = 0.00344
+ eloss =   13.800 ppe = 0.00019 ppapp = 0.00088
+ eloss =   15.000 ppe = 0.00002 ppapp = 0.00020
+ eloss =   16.200 ppe = 0.00000 ppapp = 0.00004
+ eloss =   18.600 ppe = 0.00000 ppapp = 0.00000
+ eloss =   21.000 ppe = 0.00000 ppapp = 0.00000
+  calculating mean angular momentum for each energy
+  calculating scattering angle for each energy
+  Warning: diminished accuracy in scatangleavx_s
+ CPU time for  1. energy distribution =   0.13 sec.
+   You ordered  1 distributions
+
+     For l =   14.0000000
+       Capture probability =    0.0000019
+       Mean barrier for scattering =   21.4313567
+       Mean shift in barrier for scattering =    0.0000005
+       Actual turning point =    13.243793817115542     
+  Energy below barrier(for l=0)
+   Turning point for central collisions =11.29 fm
+ Surface distance increased by  0.0302 fm
+  Calculating for r =   13.24 fm
+    distribution in energy for deln =  -2 and delz =   0
+  Total probability in nztdis_s inaccurate
+   integral probability =  0.999897
+  Mean energy - eav in nztdis_s inaccurate
+   mean energy =  6.719252  eav =  6.717089
+  Spread - wide in nztdis_s inaccurate
+   spread =  1.815579 ,   wide =  1.814292
+     for r = 13.2437938
+  Warning: Total probability in edistapp inaccurate
+  integral probability =  0.999397
+  Warning: Mean energy - eav in edistapp inaccurate
+   Mean energy =  6.715604 , eav =  6.717089
+  Warning: Spread - wide in edistapp inaccurate
+  Spread =  1.822867 , wide =  1.814292
+      for r =    13.243793817115542     
+ eloss =   -0.150 ppe = 0.00000 ppapp = 0.00000
+ eloss =    0.000 ppe = 0.00001 ppapp = 0.00000
+ eloss =    0.150 ppe = 0.00002 ppapp = 0.00000
+ eloss =    0.300 ppe = 0.00004 ppapp = 0.00000
+ eloss =    0.450 ppe = 0.00007 ppapp = 0.00000
+ eloss =    0.600 ppe = 0.00013 ppapp = 0.00000
+ eloss =    0.900 ppe = 0.00035 ppapp = 0.00001
+ eloss =    1.200 ppe = 0.00084 ppapp = 0.00006
+ eloss =    1.500 ppe = 0.00178 ppapp = 0.00023
+ eloss =    1.800 ppe = 0.00346 ppapp = 0.00071
+ eloss =    2.400 ppe = 0.01056 ppapp = 0.00446
+ eloss =    3.000 ppe = 0.02563 ppapp = 0.01732
+ eloss =    3.600 ppe = 0.05167 ppapp = 0.04653
+ eloss =    4.200 ppe = 0.08896 ppapp = 0.09347
+ eloss =    4.800 ppe = 0.13328 ppapp = 0.14896
+ eloss =    5.400 ppe = 0.17605 ppapp = 0.19684
+ eloss =    6.000 ppe = 0.20691 ppapp = 0.22305
+ eloss =    6.600 ppe = 0.21786 ppapp = 0.22241
+ eloss =    7.800 ppe = 0.17689 ppapp = 0.16262
+ eloss =    9.000 ppe = 0.09679 ppapp = 0.08647
+ eloss =   10.200 ppe = 0.03625 ppapp = 0.03608
+ eloss =   11.400 ppe = 0.00939 ppapp = 0.01245
+ eloss =   12.600 ppe = 0.00169 ppapp = 0.00369
+ eloss =   13.800 ppe = 0.00021 ppapp = 0.00096
+ eloss =   15.000 ppe = 0.00002 ppapp = 0.00023
+ eloss =   16.200 ppe = 0.00000 ppapp = 0.00005
+ eloss =   18.600 ppe = 0.00000 ppapp = 0.00000
+ eloss =   21.000 ppe = 0.00000 ppapp = 0.00000
+  calculating mean angular momentum for each energy
+  calculating scattering angle for each energy
+  Warning: diminished accuracy in scatangleavx_s
+ CPU time for  1. energy distribution =   0.13 sec.
+   You ordered  1 distributions
+
+     For l =   16.0000000
+       Capture probability =    0.0000001
+       Mean barrier for scattering =   22.9434872
+       Mean shift in barrier for scattering =    0.0000000
+       Actual turning point =    13.743505728332323     
+  Energy below barrier(for l=0)
+   Turning point for central collisions =11.29 fm
+ Surface distance increased by  0.0314 fm
+ Warning: Sumcheck wid2e =   0.0029 wid2etr =   0.0029
+  Calculating for r =   13.74 fm
+    distribution in energy for deln =  -2 and delz =   0
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+
+     For l =   18.0000000
+       Capture probability =    0.0000000
+       Mean barrier for scattering =   24.6926218
+       Mean shift in barrier for scattering =    0.0000000
+       Actual turning point =    14.274569038936518     
+  Energy below barrier(for l=0)
+   Turning point for central collisions =11.29 fm
+ Surface distance increased by  0.0233 fm
+ Warning: Sumcheck wid2e =   0.0013 wid2etr =   0.0013
+  Calculating for r =   14.27 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+  Energy below barrier(for l=0)
+   Turning point for central collisions =11.29 fm
+ Surface distance increased by  0.0248 fm
+ Warning: Sumcheck wid2e =   0.0011 wid2etr =   0.0011
+  Calculating for r =   14.39 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0262 fm
+ Warning: Sumcheck wid2e =   0.0009 wid2etr =   0.0009
+  Calculating for r =   14.50 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0270 fm
+ Warning: Sumcheck wid2e =   0.0008 wid2etr =   0.0008
+  Calculating for r =   14.61 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0257 fm
+ Warning: Sumcheck wid2e =   0.0007 wid2etr =   0.0007
+  Calculating for r =   14.72 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0219 fm
+ Warning: Sumcheck wid2e =   0.0006 wid2etr =   0.0006
+  Calculating for r =   14.84 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0193 fm
+ Warning: Sumcheck wid2e =   0.0005 wid2etr =   0.0005
+  Calculating for r =   14.95 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0182 fm
+ Warning: Sumcheck wid2e =   0.0004 wid2etr =   0.0004
+  Calculating for r =   15.06 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0184 fm
+ Warning: Sumcheck wid2e =   0.0003 wid2etr =   0.0003
+  Calculating for r =   15.17 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0199 fm
+ Warning: Sumcheck wid2e =   0.0003 wid2etr =   0.0003
+  Calculating for r =   15.29 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0219 fm
+ Warning: Sumcheck wid2e =   0.0002 wid2etr =   0.0002
+  Calculating for r =   15.40 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0239 fm
+ Warning: Sumcheck wid2e =   0.0002 wid2etr =   0.0002
+  Calculating for r =   15.62 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0163 fm
+ Warning: Sumcheck wid2e =   0.0001 wid2etr =   0.0001
+  Calculating for r =   15.85 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0136 fm
+ Warning: Sumcheck wid2e =   0.0001 wid2etr =   0.0001
+  Calculating for r =   16.07 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0158 fm
+ Warning: Sumcheck wid2e =   0.0001 wid2etr =   0.0001
+  Calculating for r =   16.30 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0186 fm
+ Warning: Sumcheck wid2e =   0.0000 wid2etr =   0.0000
+  Calculating for r =   16.52 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0174 fm
+ Warning: Sumcheck wid2e =   0.0000 wid2etr =   0.0000
+  Calculating for r =   16.75 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0113 fm
+ Warning: Sumcheck wid2e =   0.0000 wid2etr =   0.0000
+  Calculating for r =   16.97 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0096 fm
+ Warning: Sumcheck wid2e =   0.0000 wid2etr =   0.0000
+  Calculating for r =   17.20 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ Surface distance increased by  0.0124 fm
+ Warning: Sumcheck wid2e =   0.0000 wid2etr =   0.0000
+  Calculating for r =   17.42 fm
+ CPU time for  1. energy distribution =   0.00 sec.
+   You ordered  1 distributions
+ ------------------------------------------------
+ Total kinetic energy loss cross section
+  for deln =  -2 and delz =   0
+     with   1.000 MeV energy resolution (FWHM)
+ teloss MeV      sig mb/MeV   sig_appr
+   -5.3     1.4626D-08     3.3014D-11
+   -5.2     3.1854D-08     1.1274D-10
+   -5.0     6.5286D-08     3.5852D-10
+   -4.9     1.2659D-07     1.0647D-09
+   -4.7     2.3342D-07     2.9610D-09
+   -4.6     4.1132D-07     7.7340D-09
+   -4.3     1.1346D-06     4.4215D-08
+   -4.0     2.7412D-06     2.0353D-07
+   -3.7     5.9431D-06     7.7115D-07
+   -3.4     1.1776D-05     2.4557D-06
+   -2.8     3.7127D-05     1.5947D-05
+   -2.2     9.2417D-05     6.3675D-05
+   -1.6     1.8966D-04     1.7360D-04
+   -1.0     3.2987D-04     3.5010D-04
+   -0.4     4.9530D-04     5.5478D-04
+    0.2     6.5032D-04     7.2309D-04
+    0.8     7.5353D-04     8.0265D-04
+    1.4     7.7563D-04     7.7949D-04
+    2.6     5.8676D-04     5.3314D-04
+    3.8     2.8911D-04     2.6137D-04
+    5.0     9.4338D-05     9.9511D-05
+    6.2     2.0634D-05     3.1090D-05
+    7.4     3.0566D-06     8.2907D-06
+    8.6     3.1001D-07     1.9425D-06
+    9.8     2.1830D-08     4.0874D-07
+   11.0     1.1133D-10     4.8360D-09
+ Total cross section =   3.4256D-03 mb
+ Do you want Wilczynski plot as dsig/dE/dO in mb/MeV/sterad
+   or as dsig/dE/dtheta in mb/Mev/rad?
+     Enter sr or rad.
+ Angular distribution integrated over energy loss > -15.0
+  for the partition ideln =  -2 and idelz =   0
+     theta_lab    dsig_lab/dO (mb/sr)
+        31.00             5.337E-08
+        32.00             1.025E-07
+        33.00             2.184E-07
+        34.00             4.616E-07
+        35.00             9.076E-07
+        36.00             1.622E-06
+        37.00             2.624E-06
+        38.00             3.875E-06
+        39.00             5.289E-06
+        40.00             6.784E-06
+        41.00             8.337E-06
+        42.00             9.994E-06
+        43.00             1.185E-05
+        44.00             1.399E-05
+        45.00             1.646E-05
+        46.00             1.920E-05
+        47.00             2.212E-05
+        48.00             2.513E-05
+        49.00             2.819E-05
+        50.00             3.127E-05
+        51.00             3.442E-05
+        52.00             3.766E-05
+        53.00             4.103E-05
+        54.00             4.457E-05
+        55.00             4.835E-05
+        56.00             5.244E-05
+        57.00             5.691E-05
+        58.00             6.180E-05
+        59.00             6.714E-05
+        60.00             7.292E-05
+        61.00             7.918E-05
+        62.00             8.593E-05
+        63.00             9.315E-05
+        64.00             1.008E-04
+        65.00             1.088E-04
+        66.00             1.173E-04
+        67.00             1.261E-04
+        68.00             1.355E-04
+        69.00             1.453E-04
+        70.00             1.557E-04
+        71.00             1.665E-04
+        72.00             1.777E-04
+        73.00             1.895E-04
+        74.00             2.017E-04
+        75.00             2.145E-04
+        76.00             2.278E-04
+        77.00             2.416E-04
+        78.00             2.559E-04
+        79.00             2.705E-04
+        80.00             2.854E-04
+        81.00             3.007E-04
+        82.00             3.163E-04
+        83.00             3.321E-04
+        84.00             3.479E-04
+        85.00             3.637E-04
+        86.00             3.793E-04
+        87.00             3.946E-04
+        88.00             4.097E-04
+        89.00             4.246E-04
+        90.00             4.393E-04
+        91.00             4.541E-04
+        92.00             4.690E-04
+        93.00             4.838E-04
+        94.00             4.984E-04
+        95.00             5.126E-04
+        96.00             5.263E-04
+        97.00             5.393E-04
+        98.00             5.514E-04
+        99.00             5.625E-04
+       100.00             5.726E-04
+       101.00             5.819E-04
+       102.00             5.903E-04
+       103.00             5.982E-04
+       104.00             6.057E-04
+       105.00             6.130E-04
+       106.00             6.199E-04
+       107.00             6.265E-04
+       108.00             6.327E-04
+       109.00             6.385E-04
+       110.00             6.435E-04
+       111.00             6.477E-04
+       112.00             6.507E-04
+       113.00             6.525E-04
+       114.00             6.533E-04
+       115.00             6.535E-04
+       116.00             6.532E-04
+       117.00             6.529E-04
+       118.00             6.526E-04
+       119.00             6.524E-04
+       120.00             6.522E-04
+       121.00             6.520E-04
+       122.00             6.515E-04
+       123.00             6.507E-04
+       124.00             6.492E-04
+       125.00             6.467E-04
+       126.00             6.426E-04
+       127.00             6.365E-04
+       128.00             6.282E-04
+       129.00             6.183E-04
+       130.00             6.081E-04
+       131.00             5.992E-04
+       132.00             5.927E-04
+       133.00             5.899E-04
+       134.00             5.902E-04
+       135.00             5.928E-04
+       136.00             5.960E-04
+       137.00             5.976E-04
+       138.00             5.953E-04
+       139.00             5.880E-04
+       140.00             5.753E-04
+       141.00             5.588E-04
+       142.00             5.415E-04
+       143.00             5.257E-04
+       144.00             5.121E-04
+       145.00             4.982E-04
+       146.00             4.799E-04
+       147.00             4.519E-04
+       148.00             4.087E-04
+       149.00             3.528E-04
+       150.00             2.869E-04
+       151.00             2.202E-04
+       152.00             1.565E-04
+       153.00             1.022E-04
+       154.00             6.024E-05
+       155.00             3.231E-05
+       156.00             1.579E-05
+       157.00             7.100E-06
+       158.00             2.924E-06
+       159.00             1.101E-06
+       160.00             3.790E-07
+       161.00             1.192E-07
+       162.00             3.403E-08
+       163.00             8.733E-09
+       164.00             2.017E-09
+       165.00             4.170E-10
+       166.00             7.684E-11
+       167.00             1.258E-11
+       168.00             1.823E-12
+       169.00             2.321E-13
+       170.00             2.606E-14
+ Total cross section =   4.0219D-03 mb
+
+ Total grazing cross section =   0.3285E+01  mbarn
+ Total capture cross section =   0.8804E+00 mbarn
+ Total reaction cross section =   0.4165E+01 mbarn
+  -------------------------------------------------
+ Total kinetic energy distribution is stored in 
+FOR095.DAT                              
+
+ Do you want to change the energy? yes or no
+
+ Do you want make a new run? yes or no
+  ---------------------------------------------------
+ CPU time for this job was   0 min  1 sec.

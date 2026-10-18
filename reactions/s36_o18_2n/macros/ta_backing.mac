@@ -1,0 +1,35 @@
+# Macro file for geant4-stopping
+# Reaction: 36S + 18O -> 38S + 16O (2n transfer, inverse kinematics)
+#
+# NOTE (inverse kinematics): the beam-like heavy fragment 38S is the
+# "recoil" whose stopping is simulated; the light 16O is the "ejectile".
+#
+# TODO: set /reaction/excitationEnergy to the E* window used in the
+# FRESCO calculation, and provide angular_distribution.txt and
+# cross_sections.txt in this folder (see README.md).
+
+# 1. Target backing (tantalum); adjust per backing
+/detector/targetMaterial G4_Ta
+/detector/targetArealDensity 3 mg/cm2
+
+/run/initialize
+
+# 2. Thin-target mode: reaction occurs at the target surface
+/reaction/thinTarget true
+
+# Reaction kinematics (recoil = heavy beam-like fragment!)
+/reaction/targetZ 8
+/reaction/targetA 18
+/reaction/recoilZ 16
+/reaction/recoilA 38
+/reaction/ejectileZ 8
+/reaction/ejectileA 16
+/reaction/excitationEnergy 2 MeV   # TODO: match the fresco E* window
+
+/gun/particle ion
+/gun/ion 16 36
+# Set beam energy
+/gun/energy 64 MeV
+
+# Set the number of events to simulate
+/run/beamOn 10000

@@ -19,7 +19,7 @@ def parse_fresco(infile, outfile):
         start_idx += 1
         
     with open(outfile, 'w') as out:
-        out.write('# Extracted from angular_distribution_fresco.txt (Partition 2, Excit 1)\n')
+        out.write(f'# Extracted from {infile} (Partition 2, Excit 1)\n')
         out.write('# Theta_CM(deg)  dSigma/dOmega(mb/sr)\n')
         for line in lines[start_idx:]:
             if line.strip() == '&' or line.startswith('@') or line.startswith('#'):
@@ -29,4 +29,9 @@ def parse_fresco(infile, outfile):
                 # Fresnel output can have 'E' for exponent
                 out.write(f'{parts[0]}  {parts[1]}\n')
 
-parse_fresco('angular_distribution_fresco.txt', 'angular_distribution.txt')
+if __name__ == '__main__':
+    # Usage: python3 extract_fresco.py [<raw_fresco_output> [<angular_distribution>]]
+    # Defaults preserved from the original single-reaction layout.
+    infile = sys.argv[1] if len(sys.argv) > 1 else 'angular_distribution_fresco.txt'
+    outfile = sys.argv[2] if len(sys.argv) > 2 else 'angular_distribution.txt'
+    parse_fresco(infile, outfile)

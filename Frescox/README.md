@@ -22,6 +22,33 @@ The man/   directory contains the instruction manual in latex:
                       frescox-input-manual.pdf: printable output
 More documentation is at http://www.fresco.org.uk/documentation.htm
 
+## Quick build for Linux x86_64 with gfortran (top-level makefile)
+
+On a standard Linux x86_64 machine with gfortran installed
+(e.g. `sudo apt install gfortran` on Ubuntu), no extra libraries are
+needed: the code falls back on the bundled `nagstub.f` (in place of the
+commercial NAG library) and compiles the bundled LAPACK sources.
+
+From the top-level Frescox directory simply run:
+
+    make            # builds frescox, sfrescox and fr2nl in source/gfortran/
+    make install    # also copies the binaries to ~/binw/`uname -m`
+    make test       # also runs the bundled on2 test case to check the build
+    make clean      # removes the compiled objects and binaries
+
+(`install` and `test` build first if necessary, so `make install`
+alone is enough.) Then make sure `~/binw/`uname -m`` is in your PATH,
+e.g. by adding this line to your ~/.bashrc:
+
+    export PATH="$HOME/binw/`uname -m`:$PATH"
+
+After that you can run frescox from any directory, e.g.
+
+    frescox < input.nin > output.out
+
+The `make install` step replicates steps 2'), 4) and 5) below without
+needing tcsh, which the `source/mk` script requires.
+
 To compile FRESCOX,
  
    1) Enter frxy/source, and then edit the makefile for your target machine,

@@ -1,0 +1,1090 @@
+%MANUSCRIPT: Description of Source Program GRAZING_9
+\newcommand{\eto}{{\rm e}}                            % e, exp(1)
+\newcommand{\half}{\mbox{$\frac{1}{2}$}}           % "Small" 1/2
+\documentstyle[12pt]{article}
+\def\today{\bf \ifcase\month\or
+January\or February\or March\or April\or May\or June\or
+July\or August\or September\or October\or November\or December\fi
+\space\number\day, \number\year}
+\textwidth 149mm
+\textheight 245mm
+
+\begin{document}
+\thispagestyle{empty}
+\topmargin 0pt
+\headheight 0pt
+\headsep 0pt
+\topskip 9mm
+\oddsidemargin 5mm
+
+%\baselineskip=20pt
+
+\begin{center}
+{\large{\normalsize\sf Draft as of \today ~~File: instruction.tex}\\[3ex]}
+ {\Large \bf{Program GRAZING}\\{\large version 9}\\{\normalsize A Fortran Program for 
+  Estimating Reactions\\ in Collision between Heavy Nuclei.}}
+\end{center}
+
+\vskip 5truecm
+\begin{center}
+by
+\vskip 2truecm
+Aage Winther\\
+The Niels Bohr Institute\\
+Blegdamsvej 17\\
+DK-2100 Copenhagen Ø, Denmark\\
+\vskip 2truecm
+\end{center}
+
+\begin{abstract}
+The interactive Fortran program described below evaluates the 
+reactions to be expected
+in a collision between two heavy nuclei at moderate bombarding energies.
+It calculates the cross section for the 
+distribution in mass and charge, kinetic energy and excitation energy
+of the two scattered nuclei. It also calculates the cross section 
+leading to capture including coupled channel effect in the tunneling
+of the fusion barrier. \end{abstract}
+\newpage
+
+\section{Introduction}\label{intr}
+
+The program GRAZING described below is created in order to evaluate the
+observables in the multinucleon transfer reactions that happen in the
+region outside the sum of the half-density radii of two colliding heavy
+nuclei, i.e. in the grazing region. The program is not fully developed and 
+the present version GRAZING\_9 certainly still contain some bugs. I would 
+be happy to receive information about these in order to be able to
+correct them in  future versions.
+\par
+The calculations follow closely the notation and formulae given in 
+the two papers \cite{W1} and \cite{W2}.The default parameters from nuclear
+structure are average parameters based on our theoretical and
+semiempirical knowledge of nuclear radii, formfactors, level
+densities, etc. and need adjustement for individual cases. It has
+until now not been systematically compared to experimental data.
+\par
+The program is highly modular, such that the evaluation of a given
+quantity or a given operation is always made in the same subroutine
+or function routine. The general routines are collected in three 
+libraries: The general mathematical routines, MATH\_LIB, the angular
+momentum algebra, ANGULARMOM\_LIB, the general physics routines, 
+FYS\_LIB, and the standard routines related to the trajectory, 
+AKYUZ\_LIB. These files contain a few routines that are not used in 
+the present program. If an error occurs in any subroutine the flag 
+{\it ierr} is set equal to 1. Other values ($\not= 0$) may indicate 
+reduced accuracy etc. The programs make extensive use the NAG library. 
+\par
+The structure of the program is shown in Fig.\ref{fig1}. It consist
+of a main program, where the desired type of calculation is specified,
+and 8 legs that perform a specified job. The main program further
+provides facilities for calculations of total cross sections and 
+excitation functions, and calculates quantities needed in the LEGs.
+\par
+An important element in the program is the determination of the
+capture distance, which is mainly governed by the low-lying collective 
+modes. This distance, {\it rcapt}, is calculated in a subroutine, 
+CAPTURE\_S, which essentially follows ref.\cite{BDW} in solving 
+the classical equation of motion for the relative position of the 
+two ions coupled to the collective modes through the surface-surface 
+interaction (i.e. neglecting transfer but including Coulomb excitation). 
+\par
+The legs are numbered in increasing complexity of the calculation.
+Thus the subroutine LEG1\_S only calculates mean values of the observables
+and their spread. LEG2\_S calculates the distribution in N and Z, and the 
+mean values and spreads of the excitation energy and angular momentum 
+for each partition. LEG3\_S calculates the probability distribution 
+in energy as well as the mean angular momentum and drift in mass and 
+charge for given energy loss. LEG4\_S calculates the energy distribution 
+for each partition as well as the mean angular momentum loss for given
+energy loss and given partition. In LEG\_4 one may also obtain the
+distribution in excitation energy for specified ejectile or recoil 
+and an the distribution in N and Z of ejectiles or recoils after evaporation
+based on approximate excitation eneregy distributions. The distributions 
+in angular momenta of the ejectile and recoil are supposed to be evaluated 
+in LEG5\_S to LEG8\_S. They are not implemented.
+\par
+The dimensions of the arrays containing the distributions in neutrons,
+protons and energy are specified in the file GRAZING.ICL. They may
+be changed, if the program is afterwards recompiled.
+\par
+The program is constructed as an interactive program, and you are
+asked all questions needed to run the program. There are three versions
+of the program governed by the quantity {\it version}. \\
+~1) If {\it version} = {\it vms} (one of the first statements
+in the main program), the input, which you 
+make will be stored in an input files, GRAZING\_IN\_xx.DAT, where you 
+may also specify an identification (xx). You may then afterwards modify this 
+file and run the program in an automatic mode, or use it as input in a 
+batch mode. In this version output is mostly collected in named files. \\
+~2) If {\it version} = {\it unix} the input which you 
+make will be stored in FOR010.DAT and all output in other unnamed files.\\
+~3) If {\it version} = {\it unix*} is like 1) above but works in
+UNIX with named input and output files.
+\par
+Preparing an input file by running interactively may take a long 
+time, and you may therefore instead run in a preparation mode where 
+all questions are asked to prepare a correct GRAZING\_IN\_xx.DAT file, but 
+since many do-loops are truncated, the numerical results are useless.
+\par
+The output on the screen (or in your log file) contains warning and
+error messages. Most other output is found in the GRAZING\_OUT.DAT
+file (in vms and unix* versions) or in FOR010.DAT in the unix version.
+\par
+The basic variable determining the strength of the interaction in the 
+collision of the two  nuclei is the distance {\it r}(fm)of closest  
+approach. It is connected to the angular momentum {\it al}
+or impact parameter {\it rho}(fm) through the potential (Coulomb + nuclear)
+which is assumed to be the one given in ref.\cite{AW-81}. All subroutines
+directly related to the potential and the trajectory are collected
+in the library AKYUZ\_LIB. If the parameters of the potential are changed 
+here (in the subroutine CONSTANTS\_S) they will be changed everywhere.
+A change in the radius parameter {\it vdr} is implemented as a 
+standard possibility. The scattering angle {\it theta} is the elastic 
+scattering angle, and does not describe the scattering angle of the 
+reaction products. In the present version 9 of the program the quantity
+{\it vdr} is changed during the running of the program for trajectories
+with an appreciable capture probability, to take into account that the 
+mean field for the scattered trajectory is different from the mean
+field for elastic scattering (see below). The input value of {\it vdr} 
+is stored as {\it vdr0}.
+\par
+Since the calculations follow refs.\cite{W1} and \cite{W2}, the
+following sections mainly describe points where the program
+deviates from these references because of missprints or errors, or has 
+options that are not explicitly worked out. 
+
+\section{Main Program GRAZING\_9}\label{GRAZ}
+As is shown on the flowdiagram in Fig.\ref{fig1} you are asked first
+(statement number 1) which type of run you intend to make (see above).
+Next (sn 17) two parameters for excitation functions {\it ecmm} and
+{\it decm} are specified (for no excitation functions). At this point 
+you may re-enter for a new job. After specification of the colliding nuclei
+the first questions asked (sn 19) is, whether the standard parameters,
+given in the above references or described below, are to be used. You 
+may here also change the overall accuracy of the calculations, for which
+the standard value is nominally $10^{-4}$. Also one is asked about 
+various options (sn 77). They include the possibitity to calculate the 
+transfer reactions with an artificially narrow $Q$-value window to 
+reproduce the classical picture (friction), or to calculate the final 
+population of the single particle levels.
+\par
+The parameters for the standard potential is calculated in the subroutine 
+CONSTANTS\_S (sn 76).
+\par
+For the inclusion of the collective modes (sn 30) one may choose to
+include besides the low-lying modes, which are essential for the capture
+also the giant resonances (2+ and 3-). While the properties of the former 
+are taken from a table of experimental data in the subroutine QVALETC\_S
+the properties of the latter are calculated semiempirically.
+\par
+In the subroutine QVALETC\_S (sn 30) also the Fermi surfaces of the 
+colliding nuclei are determined from the separation energies for neutrons 
+and protons as obtained though the MASSE\_S subroutine in the mass tables 
+MASSEXP.DAT and MTABLEX.DAT containing experimental and semiempirical masses.
+Various options for constructing the average $Q$-values are possible.
+The $B(E2)$- and $B(E3)$-values of the low-lying collective states 
+are found through the BE23C\_S subroutine in the BE23.DAT table.
+\par
+As is seen from Fig.\ref{fig1}(sn 31) the program after preparation of the 
+basic parameters calculates the energy independent quantities, i.e. the
+height {\it ebar} and radius {\it rbar} of the Coulomb barrier as well
+as the critical energy {\it ecrit}, where the Coulomb barrier 
+disappears, and the corresponding radius {\it rcrit}.
+\par
+The energy of relative motion in the center of mass system {\it ecm}
+is used throughout. As input (sn 22) it may be given as the bombarding 
+energy in the laboratory system {\it elab} or as the bombarding energy
+per nucleon {\it epslab}. If excitation functions are to be calculated,
+the initial value of {\it ecm} or {\it epslab} should be given. In this 
+case the program re-enters at this point and {\it nestep} counts the number 
+of steps. For higher energies a semiempirical reduction factor of the ion-ion
+potential {\it zeta} is important, but the calculations are not reliable 
+if $epslab>10 MeV$. The trajectory independent characteristics are 
+evaluated (sn 80) in the subroutines LGRAZ\_S and RAINBOW\_S, i.e. the
+grazing $l$-value {\it algraz} and the rainbow angular momentum {\it alrain}
+for the reaction. 
+\par
+Next (sn 82) the classical capture angular momentum is determined by 
+solving the coupled equations of motion for the trajectory coupled to 
+the surface modes. The subroutine CAPTURE\_S includes Coulomb excitation,
+but no transfer reactions. It finds capture angular momentum 
+{\it alcapt} i.e. the lowest impact parameter, where the surface-surface 
+distance {\it s} becomes negative, and capture distance {\it rcapt}.
+As a default there is in this program included a weak non-linear 
+damping of the low-lying modes. If the the energy is too low, the program 
+does not find any capture, and the bombarding energy (inside the 
+subroutine) is changed until capture takes place for central collisions.
+The output is then the capture energy {\it ecmcapt} and {\it alcapt} = 0.
+The program also calculates the orbital integrals for each magnetic
+substate of the low-lying collective modes and the values of $\eta$
+({\it etabs(2,3,2,4)}) determining the barrier distributions are stored
+in common/capt/.
+\par
+The fact that the surfaces are deformed at capture means that the 
+Coulomb barrier is shifted. The shift in the barrier is taken into 
+account by changing the parameter {\it vdr} by an amount {\it vdrcap}
+until the new barrier for {\it ecm = ecmcapt} appears at {\it al = alcapt}. 
+This is achieved in the subroutine BARRIERPOS\_S (sn 69). This routine 
+also evaluates the inverse barrier frequency {\it homegg} including the 
+fact that the mass associated with the the barrier penetration may be 
+smaller than the reduced mass of the two ions by a factor 
+{\it corr = 1/(1+ delta)} due to the mass parameters of the surface 
+modes.  The quantal distribution of barriers then is evaluated in
+the subroutine PROBBAR\_S, which evaluates the spreading width from
+transfer reactions and the distribution of barriers from the collective
+modes at the capture distance. 
+\par
+After having chosen possible output of intermediate results (sn 71), and
+determined the jobtype (sn 21), one decides whether total cross sections 
+({\it itot = 1}) are to be calculated. The integration is fundamentally
+performed in steps {\it delr} in {\it r}, which is the quantity that
+mainly determines the probabilities for the reactions that take place.
+The stepwidths are doubled after each 10 steps, and the results 
+for all impact parameters are thus evaluated and integrated
+until no reactions take place. For angular momenta close to 
+{\it alcapt} it is , however, important to take into account that
+the surfaces have been deformed and the ion-ion potential changed.
+In this region it is therefore necessary to use the impact parameter
+or the corresponding angular momentum {\it al} as the stepping parameter  
+(in steps of {\it delal}), and get the corresponding distance of
+closest approach {\it r} from the knowledge of the potential for 
+the angular momentum {\it al}. The potential is calculated for given
+$l$ is obtained from the subroutines TRANSM\_S and BARRIERPOS\_S.
+Besides calculating the probability of capture, {\it ppcapt}, TRANSM\_S 
+calculates the mean energy loss {\it descat} of those projectiles, 
+that were not captured, or equivalently the mean increase in the height 
+of the barrier. In BARRIERPOS\_S this is translated into a shift of the
+radii {\it vdral}.
+\par
+If total cross sections are to be evaluated, the stepwidth in {\it r}
+is calculated, and a preparation is made to determine the stepwidth in
+$l$ ({\it al}) for small impact parameters. For a trajectory at the 
+capture angular momentum ({\it alcapt},  there is about 50 percent 
+chance that the projectile is captured. For the ones scattered the 
+mean value of the barrier height is calculated with the subroutines 
+TRANSM\_S and BARRIERPOS\_S , and one obtains a value for
+shift {\it vdral}(see above). Evaluating the turning point {\it rtur}
+for {\it al = alcapt} in the corresponding potential and the $l$-value
+{\it al1} for the turning point, {\it rtur + delr} gives a stepwidth
+in $l$, {\it delal = al1 - alcapt}, which is consistent with the 
+stepwidth in $r$, and which is used for all impact parameters, where 
+there is an appreciable probability for capture, and where the potential 
+therefore depends on the impact parameter.  
+\par
+For total cross sections one also needs to know the dimensions for the
+$N,Z$-distributions and the stepwidth in the energy-distributions to
+be calculated. This information is obtained (sn 87) by running the main 
+part of the program (sn 57) in a preparation mode ({\it ieprep = 1}).
+In this mode one is also asked (sn 89), whether excitation functions
+are to be evaluated. Since this may take long times, an upper limit
+for the CPU time must be given, and a time estimate is made after the 
+first energy. 
+\par
+The contributing trajectories are in principle specified by {\it r},
+and two counters {\it istep} and {\it irstep} keep track of the number 
+of steps. The integration starts with $l = 0$ and proceeds in steps
+{\it delal} in $l$ for small impact parameters until the capture probability
+is negligible. During this stage {\it istep} counts the number of steps
+while {\it irstep} is zero. For the remaining part of the integration
+(steps {\it delr} in $r$){\it irstep} counts the number of $r$-steps,   
+while {\it istep} counts the total number of steps.
+\par
+One may instead choose to calculate a single trajectory ({\it itot = 0}) 
+specified either by the angular momentum, {\it al}, or impact parameter,
+{\it rho}. The trajectory can also be specified by the distance of 
+closest approach for the elastic orbit or by the scattering angle for 
+this trajectory.
+\par
+For each trajectory the program evaluates the capture probability in the 
+WKB approximation in the subroutine TRANSM\_S on the basis of the 
+probability distribution of the barrier calculated at the capture distance.
+\par
+The main program first evaluates the inverse collision time $\omega_0$
+times $\hbar$ for neutron and proton transfer, {\it homegan} and 
+{\it homegap}, and for inelastic scattering {\it homegain}. Since the
+radial acceleration for elastic scattering close to orbiting vanishes, 
+the collision time is evaluated reducing the nuclear attraction by a 
+factor 0.25. This is an estimate from ref.\cite{BW} Fig.IV.19. It is 
+quite uncertain, but is hopefully not very important. 
+\par
+In evaluating the formfactor for inelastic scattering for trajectories
+reaching the classical capture distance or beyond, and being reflected,
+one must realize that the low surface modes get out of control. 
+The formfactors at such distances have thus been reduced with the 
+argument that for those trajectories that escape capture the 
+surface-surface distance has by zero-point fluctuations been 
+further apart than the average estimate.
+ Coulomb excitation which contributes 
+very little to the energy and angular momentum loss is neglected.
+With the same argument, the formfactors for transfer should be reduced.
+The parameters that adjusts these reductions are uncertain, and can be 
+changed in the input.
+\par
+The program calculates the probability for elastic scattering and the 
+associated imaginary part of the optical potential. Then the 
+mean-values and spreads of the six quantities  $\Delta N$, $\Delta Z$, 
+$E_a^*$, $E_A^*$, $l_a$ and $l_A$ are evaluated. At this point it should
+be noted that the mean excitation energy of the projectile, 
+$\langle E_a^*\rangle $, and of the target, $\langle E_A^*\rangle $,
+are given by
+\begin{equation}
+  \langle E_{a \tau}^*\rangle = \langle E_{A \tau}^*\rangle 
+      = \langle E_{\tau}^*\rangle /2
+  ~,  \label{eq1}
+\end{equation}
+while the corresponding spreads are given by
+\begin{equation}
+  \sigma_{a \tau}^2 = \sigma_{A \tau}^2 = \sigma_{\tau}^2 /3
+  ~,  \label{eq2}
+\end{equation}
+where the mean values and spreads for $\tau = \nu S, \nu P,..$ 
+(neutron stripping, neutron pickup etc.) are given in 
+ref.\cite{W1} Eqs.(4.12) and 4.15).
+\par
+The program then proceeds to do the job specified in the LEG subroutines. 
+The flag {\it ierr} of these subroutines indicates whether the 
+integration for total cross section is finished or not, whether only 
+one trajectory was to to calculated, or whether an error has occured.
+
+\subsection{Subroutine QVALETC\_S}\label{QVAL}
+In Fig.\ref{fig2} is shown the flowdiagram for the subroutine QVALETC\_S, where
+most of the necessary input is prepared. It relies on the availability
+of a mass tables MASSEXP.DAT and MTABLEX.DAT and a table, BE23.DAT, of 
+the B(E2)- and B(E3)-values as well as excitation energies of the lowest
+2+ and 3- states.
+\par
+The standard option for determining the Q-values for the ground state to
+ground state transitions is to take the difference between the Fermi 
+levels in target and projectile i.e.
+\begin{equation}
+   Q^{PS}_{gg} =-Q^{PP}_{gg} =  \lambda^Z_a - \lambda^Z_A \label{eq22}
+\end{equation}
+and
+\begin{equation}
+   Q^{NS}_{gg} =-Q^{NP}_{gg} =  \lambda^N_a - \lambda^N_A ~.\label{eq23}
+\end{equation}
+The Fermi-levels $\lambda^Z_a and \lambda^N_a$ e.g. in the projectile
+are defined by
+\begin{equation}
+     \lambda^N_a = \half \Bigl( M(Z_a,A_a+1)-M(Z_a,A_a-1)\Bigr) 
+      -M(0,1) \label{eq20}
+\end{equation}
+and
+\begin{equation}
+ \lambda^Z_a = \half \Bigl( M(Z_a+1,A_a+1)-M(Z_a-1,A_a-1)\Bigr) 
+      -M(1,1)~, \label{eq21}
+\end{equation}
+$M(Z,A)$ being the mass of the nucleus indicated. The model described in
+\cite{W1} allows for Q-values where $Q_{gg}^P \not= -Q_{gg}^S$. Two
+possible choices of this type are optional.
+\par
+The kind of information searched for the collective modes is governed
+by the flag {\it inelas}, which has the value -1 if inelastic is to be
+neglected, 0 if only giant resonances, 1 if only low-lying states, and
+2 if both low- and high-lying states are to be included. If data for the
+low-lying states are not found in the table one is asked to provide 
+information to supplement the table. The values {\it inelas} equal to 3 
+or 4, has the same significance as 1 and 2 respectively, but is used
+in the {\it vms} version for automatic runs, where data are skipped 
+if not found in the table. 
+
+\subsection{Subroutine CAPTURE\_S}\label{CAPT}
+In Fig.\ref{fig3} is shown the flowdiagram for the subroutine CAPTURE\_S, 
+where the classical capture angular momentum is evaluated. The central 
+part of this program is the integration routine from the NAG library and
+the subroutine FUNCAP which evaluates the equations to be integrated. 
+If so specified one may change the value of the damping,
+change to a linear damping, or introduce a quartic term in the restoring 
+force  for these modes as described in \cite{BDW}. The integration is 
+made with {\it w} as variable, which measures time a unit that increases 
+with distance to make a convenient treatment of Coulomb excitation. 
+The experience is that only very strong dampings or non-linearities 
+change the capture distance {\it rcapt} appreciably. They do however 
+have a strong influence on the shapes of the two nuclei as they develop
+after $t=w=0$. If additional output was asked for in the beginning of
+the program, one may obtain tables which are convenient for plotting the 
+shapes. The program keeps track of the overall energy and angular 
+momentum conservation during integration. Because of neglected terms in 
+the equations of motion no energy conservation can be expected after 
+capture. 
+
+\subsection{Subroutine PROBBAR\_S}\label{Prob}
+In Fig.\ref{fig4} is shown the flowdiadram of the routine in which the 
+probability distribution of barriers are computed.
+The basis for this calculation is a trajectory with {\it r} 
+equal to the capture distance {\it rcapt}. 
+For the transfer reactions a Gaussian distribution
+is assumed, with a width computed according to ref.\cite{W2}. The mean
+energy shift from transfer as well as from the surface modes
+is assumed to be taken into account by shifting the barrier to the 
+capture distance. 
+
+
+\par
+For the inelastic modes each magnetic substate should be treated separately
+if {\it phidot} is nonvanishing. If {\it phidot} is smaller than
+{\it phidotmin} the m-substates are lumped together but given a width
+{\it widspr} corresponding to the difference in "excitation energy" {\it alf} 
+($= \hbar \omega -  m \dot \Phi$). Also, since a small value of {\it alf}
+would give rize to high "excitation probabilities" {\it probb} and a nearly
+Gaussian barrier distribution, states for which {\it alf} is smaller than
+{\it esmin} are taken together with the transfer contributing to the 
+total width (i.e. the grand total width reduced by those inelastic modes
+which are treated separately). Also states with {\it probb} less than
+{\it probmin} are neglected.
+For the selected states (with higher excitation energy 
+and sufficient excitation probability) a discrete Poisson distribution 
+is assumed. 
+\par
+No explicit implementation is as yet made for deformed nuclei. They are 
+treated as (soft) vibrators giving rise to a Gaussian barrier distribution,
+which may be quite adequate.
+\par
+The result is stored in the {\it barprob} array for later use to 
+calculate the capture probability in the TRANSM\_S subroutine.
+
+\subsection{Subroutine TRANSM\_S}\label{trans}
+This subroutine calculates in a straight forward way the capture 
+probability by folding the barrier distribution {\it barprob} with
+the WKB penetrability. The mass parameter in the WKB approximation 
+is adjusted by a factor, $1/(1 + {\it delta})$ (cf. ref.\cite{W2} 
+eq.(22)), to take into account the mass parameters of the 
+collective modes. The prescription is not accurate and may be changed 
+in the original input. The result for the capture probability at the 
+classical capture should be close to 0.5.
+\par
+A problem arises for trajectories inside the capture distance. As was 
+mentioned above the reactions close to (and inside) this distance are 
+reduced with the philosophy that for the reflected trajectory the 
+surface-surface distance has on the average been further apart than 
+the grand average. For the trajectories that would surpass the nominal 
+barrier there is, however, no provision to calculate the reactions
+and the corresponding cross section is unaccounted for.
+This point needs further consideration.
+
+\subsection{Subroutine NZDISTRI\_S}\label{nzdis}
+This subroutine calculates the distribution in $N$ and $Z$ as well
+as the mean and spreads in energy and mean angular momentum for each 
+partition due to transfer reactions.
+The program evaluates the following quantities:
+\begin{itemize}
+\item $P_N = p0nn(ideln),~~~~ P_Z = p0zz(idelz), $
+\item $\langle E^* \rangle _{\Delta N, \Delta Z} = eavdist(ideln,idelz), 
+~~~~(\langle E^* \rangle _{0,0})^* = eavdist00,$
+\item $(\sigma^2_{E^*})_{\Delta N,\Delta Z} = wid2dist(deln,delz),
+~~~~(\sigma^2_{E_a^*})_{\Delta N,\Delta Z} = wid2adist(deln,delz),$
+\item $\langle M \rangle _{\Delta N,\Delta Z} = avmdist(ideln,idelz),
+~~~~(\langle M \rangle _{0,0})^* = avmdist00,$
+\item $\langle M_a \rangle _{\Delta N,\Delta Z} = avmadist(ideln,idelz),
+~~~~(\langle M_a \rangle _{0,0} = avmadist00.$
+\end{itemize}
+\par
+In this connection it should be noted that ref.\cite{W2} contains 
+a couple of misprints and errors. Thus Eq.(5.16) should read
+\begin{equation}
+      \langle E^*\rangle_{0,0}^* = \frac{P_{00}}{1-P_{00}}
+      \langle E^*\rangle_{0,0}     ~,\label{eq3}
+\end{equation}
+while Eq.(5.19) should read
+\begin{equation}
+      \left(\sigma_{E^*}^2\right)_{0,0}^*
+      =\frac{P_{00}}{1-P_{00}}\left(\left(\sigma_{E^*}^2\right)_{0,0}
+      -\frac{p_0}{P_{00}-p_0}\langle E^*\rangle^2_{0,0}\right)
+     ~.\label{eq4}
+\end{equation}
+\par
+Finally Eq.(5.24) is incorrect. The quantity 
+$\left(\sigma_{E^*_b}^2\right)_{\Delta N,\Delta Z}$ has to be evaluated
+from Eq.(5.18) using the above results (\ref{eq1}) and (\ref{eq2}).
+
+\section{Subroutine LEG1\_S}\label{leg1}
+In jobtype 1 only average values of the reaction products for a given
+trajectory are calculated. These are:
+\begin{itemize}
+\item Average excitation energy and spread of recoil, ejectile and total
+kinetic energy ({\it eava, widea, eavaa, wideaa, tav}).
+\item Average angular momentum of recoil and ejectile and total angular 
+momentum loss ({\it avma, avmaa, avm}).
+\item Average drift and spread of mass and charge ({\it drifta, wida, driftz,
+widz}).
+\item Average number of phonons in each of the collective modes ({\it 
+ff0in(i,lam,n)}).
+\end{itemize}
+In addition one obtains the capture probability ({\it ppcapt}), the
+elastic scattering angle ({\it thet}), the probability for elastic
+scattering  and the absorptive potential ({\it ww}). The mean 
+scattering angle for reactions and the corresponding differential 
+cross sections are calculated by using an average trajectory between
+the elastic trajectory and one which has suffered the mean mass and 
+charge drift and the mean energy and angular momentum loss.
+\par
+A flowdiagram of LEG1\_S is given in Fig.\ref{fig5}. Since most of 
+the quantities are evaluated in the main program the main
+part of LEG1\_S is therefore instructions about the output. One has 
+however the option to calculate the probability for kinetic energy 
+loss larger than a given cutoff $E_0$ and with a finite energy 
+resolution $\Delta$. This is evaluated in the subroutine TRESLIM\_S 
+according to the expression
+\begin{eqnarray}
+      P(E^T>E_0) & = & \frac{p_0}{2\pi i}
+      \int_{-\infty}^{\infty}\frac{\eto^{-i\beta^T E_0}}
+      {\beta^T-i\delta_+}\exp\left\{-\half\Delta^2(\beta^T)^2\right\}
+      \nonumber\\ & \times & 
+      \left[\exp\left(\sum \eto^{-iQ_{gg}^{\tau}\beta^T}
+      F^{(\tau)}(\beta^T)\right)\right] ~d\beta^T
+       ~, \label{eq5}
+\end{eqnarray}
+which corresponds to Eq.(4.23) of ref.\cite{W1} for finite energy 
+resolution. With finite energy resolution ( {\it tres} $\not= 0$ ) the 
+reaction cross section contains some elastic cross section and the
+total cross section diverges. If total cross sections are to be 
+calculated one must therefore indicate the minimum (elastic) scattering 
+angle ({\it scatmin}) to be included.
+
+\subsection{Subroutine TRESLIM\_S}\label{treslim}
+The subroutine TRESLIM\_S evaluates the expression (\ref{eq5}).
+
+\section{Subroutine LEG2\_S}\label{leg2}
+The jobtype 2 involves the calculation of the distribution in $N$ and $Z$
+after the collision and related quantities. These are:
+\begin{itemize}
+\item Average excitation energy and the energy spread of each fragment 
+(recoil or ejectile) and total kinetic energy loss for each partition.
+\item Average angular momentum of each fragment (recoil or ejectile) 
+and total angular momentum loss for each partition.
+\end{itemize}
+All these quantities are evaluated for transfer in NZDISTRI\_S 
+(cf. Section \ref{nzdis}), and for inelastic scattering in the 
+main program. A flowdiagram of LEG2\_S is given in Fig.\ref{fig6}.
+\par
+If only a single trajectory is asked for the above quantities are 
+printed out together with the scattering angle and differential cross 
+section for each partition. The latter quantities are evaluated in the
+subroutine SCATANGLEAVX\_S on the basis of the calculated mean
+energy and mean angular momentum loss for the partition in question.
+\par
+If total cross sections are asked for one may obtain printout and tables
+of all these quantities for each of the trajectories contributing to the
+total cross section. Since this may imply a very large output one is asked 
+about which quantities and which partitions one wants in printout or in
+tables.
+
+\subsection{Subroutine SCATANGLEAVX\_S}\label{scatangleavx}
+This subroutine evaluates the scattering angle for a reaction, where 
+the mass, charge, energy and orbital angular momentum has been changed 
+by given amounts. While for simple one-step processes the angle 
+could be given by a simple average between the scattering angle in the 
+entrance and exit channels, the scattering angle for a deep inelastic
+reaction cannot be estimated this way. In the present program
+the trajectory reaches the turning point in the entrance channel
+and is gradually changed on the way out. The prescription for the
+rate of the energy loss is taken from Fig.5 of ref.\cite{W2} to
+take place over a range the order of unity of the parameter $w$ 
+($w0-delw|w0+delw$) centered around $w = w0$.
+The transfer of angular momentum and mass and charge is assumed 
+to be faster (no polarization effect) and thus take place around
+$w0/2$ with a width $delw/2$. The quantities $w0$ and $delw$ 
+are input to the program. Standard values are $w0=1$ and $delw = .5$,
+but the values are increased in the program (in a smooth way) for 
+cases where the turning points in entrance and exit channels are 
+very far apart.
+
+\section{Subroutine LEG3\_S}\label{leg3}
+In this jobtype energy distributions are evaluated summed over
+all partitions and over all transferred angular momenta. One has three
+options:\\
+1. The distribution in total kinetic energy \\
+2. The distribution in excitation energy of the ejectiles\\
+3. The distribution in excitation energy of the recoil\\
+For total cross sections one has the additional option to produce\\
+4. A table of the double differential cross section as function of
+angle and total kinetic energy loss to produce a Wilczynski Plot.
+\par
+In all cases a finite energy resolution {\it tres} is asked for, which 
+must be greater than 1 MeV (FWHM). This facilitates the inclusion 
+of the inelastic reactions. 
+\par
+With finite energy resolution the 
+reaction cross section contains some elastic cross section and the
+total cross section diverges. If total cross sections are to be 
+calculated one should therefore indicate the minimum (elastic) scattering 
+angle ({\it scatmin}) to be included.
+\par
+A flowdiagram of LEG3\_S is given in Fig.\ref{fig7}.
+\subsection{Subroutine TDISTRI\_S}\label{tdistri}
+The subroutine TDISTRI\_S evaluates the total kinetic energy distribution
+according to
+\begin{equation}
+  P_{\Delta}(E^T)=  p_0\frac{1}{2\pi}\int_{-\infty}^{\infty}
+      \eto^{-i\beta^T E^T}\exp\left\{-\half\Delta^2(\beta^T)^2\right\}
+      z_{tr}(\beta^T)z_{in}^a(\beta^T)z_{in}^A(\beta^T) ~d\beta^T 
+      ~.\label{eq6}
+\end{equation}
+with $\Delta = tres/2.35..$. The characteristic function due to transfer 
+$Z_{tr}(\beta^T)=z_{tr}(\beta^T)/z_{tr}(0)$ is given in ref.\cite{W1} 
+Eq.(4.27) i.e. 
+\begin{eqnarray}
+  z_{tr}(\beta^T) & = & \exp \left(
+   \eto^{-iQ_{gg}^{\nu S}\beta^T}F^{\nu S}(\beta^T,\beta^T,0,0)
+  +\eto^{iQ_{gg}^{\nu S}\beta^T}F^{\nu P}(\beta^T,\beta^T,0,0)\right.
+     \label{eq7} \\   & ~ & ~~~~ + \left.
+   \eto^{-iQ_{gg}^{\pi S}\beta^T}F^{\pi S}(\beta^T,\beta^T,0,0)
+  +\eto^{iQ_{gg}^{\pi S}\beta^T}F^{\pi P}(\beta^T,\beta^T,0,0)\right)
+     ~.\nonumber
+\end{eqnarray}
+For the excitation of the inelastic modes, $n$, the characteristic function
+is given in ref.\cite{W1} Eqs.(2.54)-(2.57), where (2.57) should read 
+\begin{equation}
+      p_m^a(\omega_m,\mu_m)=\frac{2\pi a}{\hbar^2\ddot r_0}
+      \left( \frac{\partial U^N_{aA}}{\partial r}\right)^2
+      \alpha^2_m R_a^2 \left( Y_{\lambda_m \mu_m}
+      ({\scriptstyle \frac{\pi}{2}},0)\right)^2
+      \eto^{-(\omega_m-\mu_m\dot\Phi_0)^2 a/\ddot r_0}
+     ~. \label{eq8}
+\end{equation}
+One thus finds the characteristic function 
+$Z_{in}^a(\beta^T)=z_{in}^a(\beta^T)/z_{in}^a(0)$ with
+\begin{equation}
+  z_{in}^a(\beta^T)  = \exp\left(\sum_m p_m^a \eto^{(i\hbar \omega_m \beta^T
+            -(\sigma_{gm} \beta^T)^2/2)}\right) ~,\label{eq9}
+\end{equation}
+and 
+\begin{equation}
+  p_m^a(\omega_m) = \sum_{\mu_m} p_m^a(\omega_m,\mu_m)~.\label{eq10}
+\end{equation}
+In Eq.\ref{eq9} is also included a width $\sigma_{gm}$ of the giant
+resonances, leading to a mean square spread of the levels proportional to
+the number of phonons in the mode.
+\par
+It is noted that the factor $p_0=p_{tr} p_a p_A$ in Eq. \ref{eq6} being 
+the probability for elastic scattering arizes from the factors $1/z_{tr}(0)$,
+$1/z_{in}^a(0)$ and $1/z_{in}^A(0)$.
+
+\subsection{Subroutine EDISTA\_S}\label{edista}
+This subroutine evaluates the energy distribution of ejectile or recoil
+summed over all partitions. For the ejectile it is given by
+\begin{equation}
+  P_{\Delta}(E_a)=  p_{tr} p_a\frac{1}{2\pi}\int_{-\infty}^{\infty}
+      \eto^{-i\beta_a E_a}\exp\left\{-\half\Delta^2(\beta_a)^2\right\}
+      z_{tr}(\beta_a,0,0,0)z_{in}^a(\beta_a)~d\beta_a \label{eq11}
+\end{equation}
+with
+\begin{eqnarray}
+      z_{tr}(\beta_a,0,0,0) = &\exp\left( F^{\nu S}(\beta_a,0,0,0)
+      +F^{\nu P}(\beta_a,0,0,0)\right.\nonumber \\   &~~~+ \left.
+      F^{\pi S}(\beta_a,0,0,0)+F^{\pi P}(\beta_a,0,0,0)\right)
+     ~,\label{eq12}
+\end{eqnarray}
+and similar for the recoil.
+
+\subsection{Subroutine EDISTAPP\_S}\label{edistapp}
+This subroutine evaluates the an approximate energy distribution of
+ejectile or recoil i.e. an approximation to the result described in
+the routine \ref{edista}. The approximation for the energy distribution
+for transfer is based on the expression Eqs.(4.16)-(4.18) of ref. \cite{W1}.
+One uses the the corresponding characteristic function:
+\begin{equation}
+     Z_{tr}(\beta_a) = \eto^{-(\beta_a \Delta)^2/2}
+     \left( p_{tr}+(1-p_{tr})(1-i \beta_a \langle E \rangle _0 )^
+      {(-\langle E_{tr} \rangle _0/\sigma_{0tr}^2)}\right) ~,\label{eq12a}
+\end{equation}
+where $\langle E_{tr} \rangle_0$ is the mean energy and $\sigma_{0tr}^2$ 
+the mean square width for those transfer reactions (with probability 
+$p_{tr}$) that do not lead to elastic scattering. The inelastic 
+processes are included as in \ref{edista}.
+\par
+The approximation (\ref{eq12a}) is useful for the calculation of
+evaporation probabilities in \ref{leg4}, where very many distributions 
+are required. A comparison with the results of \ref{edista} gives an idea
+about the accuracy that is achieved.
+
+\subsection{Subroutine MAVTDIST\_S}\label{mavtdist}
+In order to estimate the scattering angle for a given kinetic energy
+loss, $E^T$, the corresponding average angular momentum loss should 
+be evaluated. One finds from ref.\cite{W1} 
+\begin{eqnarray}
+  \langle M_b&+&M_B\rangle _{E^T} = \frac{p_0}{P_{\Delta}(E^T)}
+      \frac{1}{2\pi}\int_{-\infty}^{\infty} ~d\beta^T \eto^{-i\beta^T E^T}
+      \exp\left\{-\half\Delta^2(\beta^T)^2\right\}\nonumber \\
+      &\times&\frac{\partial}{i\partial\zeta}\exp\left(\sum_{\tau} 
+      \eto^{-iQ_{gg}^{\tau}\beta^T}F^{\tau}(\beta^T,\beta^T,\zeta,\zeta)
+      +F^a(\beta^T,\zeta)+F^A(\beta^T,\zeta)\right)
+      {\Big |}_{\zeta =0}\nonumber \\      
+      & &~~~~~~~~~~~= \frac{p_0}{P_{\Delta}(E^T)}
+      \frac{1}{2\pi}\int_{-\infty}^{\infty} ~d\beta^T 
+      \eto^{-i\beta^T E^T}\exp\left\{-\half\Delta^2(\beta^T)^2\right\}
+      \label{eq13} \\
+      &\times&\exp\left(\sum_{\tau}\eto^{-iQ_{gg}^{\tau}\beta^T}
+      F^{\tau}(\beta^T,\beta^T,0,0)
+      +F^a(\beta^T,0)+F^A(\beta^T,0)\right) \nonumber \\
+      &\times&\frac{\partial}{i\partial\zeta}
+      \left(\sum_{\tau}\eto^{-iQ_{gg}^{\tau}\beta^T}
+      F^{\tau}(\beta^T,\beta^T,\zeta,\zeta)+F^a(\beta^T,\zeta)
+      +F^A(\beta^T,\zeta)\right){\Big |}_{\zeta =0}\nonumber
+\end{eqnarray}
+with
+\begin{eqnarray}
+      \frac{\partial F^{\tau}}{i\partial\zeta}{\Big |}_{\zeta =0}
+       & = &  k_\nu(r_0)\eto^{L_\nu^{(0)}-(J_{\nu}^{(0)})^2} 
+      \left[ 4 \frac{\dot \Phi_0 c_3^2(b_a^{\nu}+b_A^{\nu})}
+      {B_{\nu}\omega_{0\nu}}
+      {\rm G}_2(J_{\nu}^{(0)}-i\hbar\omega_{0\nu}B_{\nu}\beta^T/2)\right.
+      \label{eq14}\\
+       & + &\left.\left( \frac{(b_A^{\nu}-b_a^{\nu})}{D_{\nu}}
+      \frac{k_{\bot}}{\kappa_{\nu}}+ 
+       2 J_{\nu}^{(0)}\frac{\dot \Phi_0 c_3^2(b_a^{\nu}+b_A^{\nu})}
+      {B_{\nu}\omega_{0\nu}}\right)
+      {\rm G}_1(J_{\nu}^{(0)}-i\hbar\omega_{0\nu}B_{\nu}\beta^T/2)\right]
+      \nonumber 
+\end{eqnarray}
+and
+\begin{equation}
+      \frac{\partial F^{a}}{i\partial\zeta}{\Big |}_{\zeta =0}
+      = \sum_m q_m^a \eto^{(i\hbar \omega_m \beta^T
+            -(\sigma_{gm} \beta^T)^2/2)} \label{eq15}
+\end{equation}
+with
+\begin{equation}
+   q_m^a(\omega_m) = \sum_{\mu_m} \mu_m p_m^a(\omega_m,\mu_m)~.\label{eq16}
+\end{equation}
+
+\subsection{Subroutine DRIFTNZTDIS\_S}\label{driftnztdis}
+In order to estimate the scattering angle one also needs the average 
+drift of neutrons and protons for given kinetic energy loss. 
+One finds from ref.\cite{W1} the average neutron drift
+\begin{eqnarray}
+     \langle \Delta N\rangle _{E^T} &=& \frac{p_0}{P_{\Delta}(E^T)}
+      \frac{1}{2\pi}\int_{-\infty}^{\infty} ~d\beta^T 
+      \eto^{-i\beta^T E^T}\exp\left\{-\half\Delta^2(\beta^T)^2\right\}
+      \label{eq17} \\
+      &\times&\exp\left(\sum_{\tau}\eto^{-iQ_{gg}^{\tau}\beta^T}
+      F^{\tau}(\beta^T,\beta^T,0,0)
+      +F^a(\beta^T,0)+F^A(\beta^T,0)\right) \nonumber \\
+      &\times&\left(\eto^{-iQ_{gg}^{\nu P}\beta^T}   
+       F^{\nu P}(\beta^T,\beta^T,0,0)-\eto^{-iQ_{gg}^{\nu S}\beta^T}
+      F^{\nu S}(\beta^T,\beta^T,0,0)
+      \right)\nonumber
+\end{eqnarray}
+and similar for the proton drift.
+
+\subsection{Subroutine WILSH\_S}\label{wilsh}
+The scattering angle for given total kinetic energy loss $E^T$ is evaluated
+from the mean angular momentum loss and mass and charge drifts for this
+energy in the routine \ref{scatangleavx}. One may obtain an approximate 
+differential cross section corresponding to each trajectory by using
+the elastic geometric cross section as is done under option 1. 
+In order to obtain the true angular distributions one must consider
+the actual correlation between scattering angle and impact parameter and
+sum over several trajectories. In the present subroutine this is done
+by interpolation, producing a table of the cross section $d\sigma$ 
+associated with the turning point between $r$ and $r+dr$ i.e.
+\begin{equation}
+   \frac{d\sigma}{dr} = \rho (r) \frac{d\rho}{dr} P(E^T) P_{capt} \nonumber
+\end{equation}
+and a corresponding dense table of the scattering angle $\theta'(r)$.
+To smooth out the rainbow angles the cross section $\rho d\rho 
+/({\rm sin}\theta d\theta )$ is folded with a Gaussian distribution
+$\exp ((\theta - \theta'(r))/\Delta )^2/2)$ of width $\Delta$, which is
+an input to the routine. The resulting expression for 
+the differential cross section is
+\begin{equation}
+   \frac{d\sigma}{d\Omega} = \frac{1}{{\rm sin}\theta}
+      \frac{1}{{\sqrt{2\pi}\Delta}}
+      \int _{-\infty}^{\pi}~dr \frac{d\sigma}{dr}
+      \exp\frac{(\theta - \theta'(r))^2}{2(\Delta )^2}~.\label{eq18}
+\end{equation}
+A flow diagram of the routine is given in Fig.\ref{fig8}.
+\subsection{Subroutine WILSH\_PLOT\_S}\label{wilsh_plot}
+This subroutine produces a command file to make a Wilczynski plot
+on the basis of the table produced in WILSH\_S. To run this command
+file one needs the program NANNI.GRAPH.
+
+\section{Subroutine LEG4\_S}\label{leg4}
+In this jobtype energy distributions are evaluated for each partition
+summed over all transferred angular momenta. In calculating energy
+distributions for partitions far from the entrance channel one meets the
+problem that the nuclei here have less binding energy than one would
+assume from the simple model of multinucleon transfer between two 
+fixed mean fields. In the present program it is assumed that the
+transfer of nucleons is associated with a change in total kinetic
+energy which follows the simple model with a constant minimum 
+Q-value per step. After the collision the transferred nucleons find
+themselves in a nucleus which most often offers less binding than was
+assumed. This is not very serious since the mean excitation energy 
+associated with multinucleon transfer is usually quite high. The 
+excitation energy of the final nuclei is simply assumed to be less by 
+the difference between the model binding energies and the actual binding 
+energies of the recoil and the ejectile in question. For the part of the
+distribution where there are no bound states available, the transfer is 
+assumed to be blocked and the transfer probabilities are modified 
+accordingly. All these calculations of multinucleon transfer are made with
+approximate energy distributions based on gamma-distributions with the
+correct mean excitation energies and spreads.
+\par
+For reactions with a small net number of transfered nucleons, a more 
+accurate energy distribution should be obtainable. It is numerically 
+calculated in option 3 for selected partitions, together with the mean 
+angular momentum for a given excitation energy (and for this partition).
+\par
+Jobtype 4 offers 5 options:\\
+1. Approximate distribution in excitation energy of all recoils or 
+ejectiles corrected for the actual binding energies as described above \\
+2. Approximate distribution in excitation energy of recoils or ejectiles
+after correction for actual masses and after evaporation\\
+3. The detailed distribution in excitation energy of selected recoils
+or ejectiles\\
+4. The detailed distribution in total kinetic energy of selected 
+partitions\\
+For total cross sections one has the additional option to produce\\
+5. A table of the double differential cross section as function of
+mass or charge and total kinetic energy loss to produce a plot.
+\par
+A flowdiagram of LEG4\_S is given in Fig.\ref{fig9}. This routine
+evaluates the distribution over N and Z and the corresponding mean
+excitation energies for each partition to be used in the various options,
+which are, however, evaluated in separate subroutines described below.   
+\subsection{Subroutine LEG41\_S}\label{leg41}
+In this routine the actual binding energies (masses) of the product nuclei
+are read in the mass table and compared to the masses assumed in the model.
+A flowdiagram of LEG41\_S is given in Fig.\ref{fig10}.
+In the standard option for the ground state to ground state Q-values
+Eqs.(\ref{eq22})-(\ref{eq23}) the model mass of an ejectile is 
+\begin{eqnarray}
+   M_{app}(Z_a+\Delta Z,A_a+\Delta N)= M_{app}(Z_a,A_a)
+      &+& (M(1,1)-\lambda^Z_a) \Delta Z \\ \nonumber
+      &+& (M(0,1)-\lambda^N_a) \Delta N ~,\label{eq19}
+\end{eqnarray}
+where the mass $M_{app}$ is given by
+\begin{eqnarray}
+   M_{app}(Z_a,A_a) &=& {\mbox{$\frac{1}{4}$}}\Bigl( M(Z_a+1,A_a+1)
+      +M(Z_a-1,A_a-1)\\ \nonumber
+       &+&  M(Z_a,A_a+1)+M(Z_a,A_a-1)\Bigr) ~.\label{eq19a}
+\end{eqnarray}
+For other Q-value options the model mass is changed correspondingly.
+\par
+The distribution in excitation energy of the fragments is estimated
+by a gamma-distribution with the calculated mean energy and spread
+for the partition in question. This distribution over N and Z is 
+corrected by the part of the distribution that lies below the actual
+ground state mass in the subroutine ENZCOR\_S. 
+
+\subsection{Subroutine LEG42\_S}\label{leg42}
+In this routine the mass and charge distributions after evaporation
+is estimated. It is made on the basis of the estimated distribution 
+in excitation energy of the fragments as given by a gamma-distribution 
+with the calculated mean energy and spread for the partition in question. 
+The distribution over N and Z is then corrected in the routine ENZCOR\_S
+for the actual masses as described in Section \ref{leg42}. Finally
+the evaporation of neutrons is estimated in the subroutine EVAP\_S.
+A flowdiagram of LEG42\_S is given in Fig.\ref{fig11}.
+\subsection{Subroutine LEG43\_S}\label{leg43}
+In this routine the distribution in excitation energy of selected
+ejectiles or recoils are calculated numerically. For an ejectile
+of charge number $Z_a+\Delta Z$ and mass number $A_a+\Delta N+\Delta Z$
+one finds the distribution
+\begin{eqnarray}
+ & &P_{\Delta N \Delta Z}(E^*_a) = \frac{p_{tr} p_a}{P_{\Delta N \Delta Z}}
+      \frac{1}{2\pi}\int_{-\infty}^{\infty}~d\beta_a
+      \eto^{-i\beta_a E_a}\label{eq25} \\
+      &\times &\exp\Bigl( \sum_{\tau}F^{\tau}(\beta_a,0,0,0)
+      +F^{a}(\beta_a,0)\Bigr) B_{\Delta N}(F^{\nu P},F^{\nu S}) 
+      B_{\Delta Z}(F^{\pi P},F^{\pi S}) ~.\nonumber 
+\end{eqnarray}
+In this expression $F^{\tau}=F^{\tau}(\beta_a,0,0,0)$ 
+is given by ref.\cite{W1} Eq.(2.38) and $F^a=F^a(\beta_a,0)$ is 
+given by Eq.(2.55) with $p^a_m$ as defined in (\ref{eq8}) above.
+The results are compared to the results of the approximation,
+where a gamma-distribution with the correct mean energy and spread 
+is used. This comparison is a help in estimating the accuracy of 
+the approximate treatments in LEG41\_S and LEG42\_S.
+
+A flowdiagram of LEG43\_S is given in Fig.\ref{fig12}.
+\par
+It should be noted that because the distribution in excitation energy
+is not corrected for the actual mass of the fragment as
+described in Section \ref{leg41} above, the results can
+only be trusted for small values of $\Delta N$ and $\Delta Z$.
+
+\subsection{Subroutine LEG44\_S}\label{leg44}
+In this routine the distribution in total kinetic energy for selected
+partitions are calculated numerically. For a partition, where the ejectile
+has charge number $Z_a+\Delta Z$ and mass number $A_a+\Delta N+\Delta Z$
+one first calculates the distribution in total excitation energy
+\begin{eqnarray}
+ & &P_{\Delta N \Delta Z}(E^*) = \frac{p_{0}}{P_{\Delta N \Delta Z}}
+      \frac{1}{2\pi}\int_{-\infty}^{\infty}~d\beta
+      \eto^{-i\beta E^*}\label{eq26} \\
+      &\times &\exp\Bigl( \sum_{\tau}F^{\tau}(\beta ,\beta ,0,0)
+      +F^{a}(\beta_a,0)+F^{A}(\beta_a,0)\Bigr) 
+      B_{\Delta N}(F^{\nu P},F^{\nu S}) 
+      B_{\Delta Z}(F^{\pi P},F^{\pi S}) ~,\nonumber 
+\end{eqnarray}
+where $F^{\tau}=F^{\tau}(\beta ,\beta ,0,0)$ is given by ref.\cite{W1} 
+Eq.(2.38). The distribution in the total kinetic energy, $T$, is obtained
+from here since 
+\begin{equation}
+      T=E(\alpha )-E^*-\Delta N Q_{gg}^{\nu S}-
+      \Delta Z Q_{gg}^{\pi S}~.\label{eq27}
+\end{equation}
+This distribution is not expected to be very sensitive to the problem
+that the actual masses of the reaction products differs from the 
+model-masses (\ref{eq19}), and might therefore be trusted in a much
+larger $\Delta N,\Delta Z$ range.
+A flowdiagram of LEG44\_S is given in Fig.\ref{fig13}.
+\par
+In order to obtain a realistic angular distribution of the fragments
+one should calculate the mean loss of orbital angular momentum for the
+partition in question $\Delta L = -\langle M_a + M_A \rangle $. 
+This is done in the subroutine MAVNZDIS\_S.
+On the basis of $\Delta L, T, \Delta N$ and $\Delta Z$ the scattering 
+angle is calculated in the subroutine SCATANGLEAVX\_S described in 
+Section \ref{scatangleavx}.
+
+\subsection{Subroutine MAVNZDIS\_S}\label{mavnzdis}
+In order to estimate the scattering angle for a given partition 
+$(\Delta N,\Delta Z)$ and a given kinetic energy loss, the average 
+angular momentum loss for given total excitation energy, $E^*$, should 
+be evaluated. One finds from ref.\cite{W1} 
+\begin{eqnarray}
+\lefteqn{\langle M_b + M_B \rangle _{\Delta N\Delta Z,E^*} } \nonumber \\
+ \lefteqn{ =     \frac{p_0}{P_{\Delta N\Delta Z}(E^*)}
+      \frac{1}{2\pi}  \int_{-\infty}^{\infty} ~d\beta~\eto^{-i\beta E^*}
+      \frac{\partial}{i\partial\zeta} \biggl( 
+      B_{\Delta N}(F^{\nu P},F^{\nu S}) B_{\Delta Z}(F^{\pi P},F^{\pi S}) 
+      }\nonumber \\
+&\times  \exp \Bigl( \sum_{\tau}F^{\tau}(\beta ,\beta ,\zeta ,\zeta )
+      +F^a(\beta ,\zeta ) +F^A(\beta ,\zeta ) \Bigr) \biggr) 
+      {\Big |}_{\zeta =0}  \nonumber \\
+      \lefteqn{ =  \frac{p_0}{P_{\Delta N\Delta Z}(E^*)}
+      \frac{1}{2\pi}\int_{-\infty}^{\infty} ~d\beta~ 
+      \eto^{-i\beta E^*}     
+     \exp \Bigl( \sum_{\tau} F^{\tau}(\beta ,\beta,0,0)
+      +F^a(\beta,0)+F^A(\beta,0)\Bigr) }\nonumber \\
+     & \left( B_{\Delta N+1}(F^{\nu P},F^{\nu S})
+      B_{\Delta Z}(F^{\pi P},F^{\pi S})
+      \frac{\partial F^{\nu S}}{i\partial \zeta}
+       + B_{\Delta N-1}(F^{\nu P},F^{\nu S})
+      B_{\Delta Z}(F^{\pi P},F^{\pi S})
+      \frac{\partial F^{\nu P}}{i\partial\zeta}  \right.   \nonumber \\
+      &+ B_{\Delta N}(F^{\nu P},F^{\nu S})
+      B_{\Delta Z +1}(F^{\pi P},F^{\pi S})
+      \frac{\partial F^{\pi S}}{i\partial\zeta}
+       + B_{\Delta N}(F^{\nu P},F^{\nu S})
+      B_{\Delta Z -1}(F^{\pi P},F^{\pi S})
+      \frac{\partial F^{\pi P}}{i\partial\zeta}  \nonumber \\
+      &\left. \frac{\partial F^a(\beta,\zeta)}{i\partial\zeta}+
+      \frac{\partial F^A(\beta,\zeta)}
+      {i\partial\zeta} \right) {\Big |}_{\zeta =0}~,    \label{eq28} 
+\end{eqnarray}
+where the partial derivatives of $F^{\tau}$ are given in Eqs.(\ref{eq14})
+and (\ref{eq15}) and $B_n(x,y)$ are the Bessel distributions given in
+ref.\cite{W1} Eq.(5.2).
+\subsection{Subroutine LEG45\_S}\label{leg45}
+This routine produces tables for contour plotting of the cross section
+as a function of the total kinetic energy and of the charge or the mass
+of the ejectile. The energy distribution is calculated according to the
+approximation in subroutine PROBDTAB\_S in terms of the gamma distribution 
+for each mass and charge partition.
+
+\begin{thebibliography}{19}
+\bibitem{W1}          A.Winther
+                      {\em Nucl.\ Phys.} {\bf A572} (1994) 191
+\bibitem{W2}          A.Winther
+                      {\em Nucl.\ Phys.} {\bf A594} (1995) 203
+\bibitem{AW-81}       R.\"{O}. Aky\"{u}z and A. Winther,
+                      in {\em Proceedings of the Enrico Fermi
+                      International School of Physics, 1979,}\/
+                      "Nuclear Structure and Heavy-Ion Reactions",
+                      Eds.\ R.A. Broglia, C.H. Dasso, and R. Ricci
+                      (Amsterdam: North-Holland Publ.~Co., 1981) 491
+\bibitem{BDW}         R.A. Broglia, C.H. Dasso and A. Winther 
+                      in Proceedings of the Enrico Fermi International 
+                      School of Physics 1979 (ed. R. A. Broglia, 
+                      C. H. Dasso and R. Ricci) North Holland Publ. Co., 
+                      Amsterdam 1981
+\bibitem{BW}          R.A. Broglia and A. Winther: Heavy Ion Reactions 
+                      Parts I \& II, Frontiers in Physics Vol. 84, 
+                      Addison-Wesley Publ. Co., 1991
+
+\end{thebibliography}
+\begin{figure}[p]
+\caption{Flowdiagram for the main program. The numbers indicated in 
+ circles refer to statement numbers in the program. The various boxes 
+ indicate input(prompts), output, calculations, and branches. The 
+ quantities in ellipses indicate calls to subroutines.\label{fig1}}
+\end{figure}
+\begin{figure}[p]    
+\caption{Flowdiagram for the subroutine QVALETC\_S. The numbers indicated in 
+ circles refer to statement numbers in the program. The various boxes 
+ indicate input(prompts), output, calculations, and branches. The 
+ quantities in ellipses indicate calls to subroutines.\label{fig2}}
+\end{figure}
+\begin{figure}
+\caption{Flowdiagram for the subroutine CAPTURE\_S. The numbers indicated in 
+ circles refer to statement numbers in the program. The various boxes 
+ indicate input(prompts), output, calculations, and branches. The 
+ quantities in ellipses indicate calls to subroutines.\label{fig3}}
+\end{figure}
+\begin{figure}[p]
+\caption{Flowdiagram for the subroutine PROBBAR\_S. The numbers indicated in 
+ circles refer to statement numbers in the program. The various boxes 
+ indicate input(prompts), output, calculations, and branches. The 
+ quantities in ellipses indicate calls to subroutines.\label{fig4}}
+\end{figure}
+\begin{figure}[p]
+\caption{Flowdiagram for the subroutine LEG1\_S. The numbers indicated in 
+ circles refer to statement numbers in the program. The various boxes 
+ indicate input(prompts), output, calculations, and branches. The 
+ quantities in ellipses indicate calls to subroutines.\label{fig5}}
+\end{figure}
+\begin{figure}[p]
+\caption{Flowdiagram for the subroutine LEG2\_S. The numbers indicated in 
+ circles refer to statement numbers in the program. The various boxes 
+ indicate input(prompts), output, calculations, and branches. The 
+ quantities in ellipses indicate calls to subroutines.\label{fig6}}
+\end{figure}
+\begin{figure}[p]
+\caption{Flowdiagram for the subroutine LEG3\_S. The numbers indicated in 
+ circles refer to statement numbers in the program. The various boxes 
+ indicate input(prompts), output, calculations, and branches. The 
+ quantities in ellipses indicate calls to subroutines.\label{fig7}}
+\end{figure}
+\begin{figure}[p]
+\caption{Flowdiagram for the subroutine WILSH\_S. The numbers indicated in 
+ circles refer to statement numbers in the program. The various boxes 
+ indicate input(prompts), output, calculations, and branches. The 
+ quantities in ellipses indicate calls to subroutines.\label{fig8}}
+\end{figure}
+\begin{figure}[p]
+\caption{Flowdiagram for the subroutine LEG4\_S. The numbers indicated in 
+ circles refer to statement numbers in the program. The various boxes 
+ indicate input(prompts), output, calculations, and branches. The 
+ quantities in ellipses indicate calls to subroutines.\label{fig9}}
+\end{figure}
+\begin{figure}[p]
+\caption{Flowdiagram for the subroutine LEG41\_S. The numbers indicated in 
+ circles refer to statement numbers in the program. The various boxes 
+ indicate input(prompts), output, calculations, and branches. The 
+ quantities in ellipses indicate calls to subroutines.\label{fig10}}
+\end{figure}
+\begin{figure}[p]
+\caption{Flowdiagram for the subroutine LEG42\_S. The numbers indicated in 
+ circles refer to statement numbers in the program. The various boxes 
+ indicate input(prompts), output, calculations, and branches. The 
+ quantities in ellipses indicate calls to subroutines.\label{fig11}}
+\end{figure}
+\begin{figure}[p]
+\caption{Flowdiagram for the subroutine LEG43\_S. The numbers indicated in 
+ circles refer to statement numbers in the program. The various boxes 
+ indicate input(prompts), output, calculations, and branches. The 
+ quantities in ellipses indicate calls to subroutines.\label{fig12}}
+\end{figure}
+\begin{figure}[p]
+\caption{Flowdiagram for the subroutine LEG44\_S. The numbers indicated in 
+ circles refer to statement numbers in the program. The various boxes 
+ indicate input(prompts), output, calculations, and branches. The 
+ quantities in ellipses indicate calls to subroutines.\label{fig13}}
+\end{figure}
+
+\end{document}

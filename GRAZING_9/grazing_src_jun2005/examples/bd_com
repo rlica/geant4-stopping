@@ -1,0 +1,27 @@
+#!/bin/csh
+cd /home/nanni/grazing/nini
+/home/nanni/grazing/grazing_9  << fine
+OK
+28 58 28 60
+s
+yes 
+   1
+100
+no       
+no       
+OK
+yes                ! for writing bd in 11
+no
+   1               ! leg number     
+yes      
+0.000 
+0  0
+cm
+0.0  0.0    
+no
+no
+no
+fine
+#
+mv fort.11 bd_58ni60ni_031.datnews
+#

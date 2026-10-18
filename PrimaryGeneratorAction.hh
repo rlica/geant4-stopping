@@ -18,6 +18,9 @@ public:
 
     const G4ParticleGun* GetParticleGun() const { return fParticleGun; }
 
+    G4int GetRecoilZ() const { return fRecoilZ; }
+    G4int GetRecoilA() const { return fRecoilA; }
+
 private:
     void DefineCommands();
 
@@ -30,11 +33,14 @@ private:
     G4int fRecoilA = 32;
     G4int fEjectileZ = 8;
     G4int fEjectileA = 16;
-    
+
+    G4double fExcitationEnergy = 6.0; // MeV, E* applied to the recoil fragment
+
     G4double fThetaMin = 0.0;
     G4double fThetaMax = 180.0; // degrees
     
     G4bool fIsThinTarget = false;
+    G4bool fCrossSectionWarned = false; // warn once when falling back to thin target
 
     // Cross-section data
     void LoadCrossSectionData();

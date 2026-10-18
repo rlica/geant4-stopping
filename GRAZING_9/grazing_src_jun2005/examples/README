@@ -1,0 +1,33 @@
+----------------------------------------------------------------------------
+
+	Some scripts to run GRAZING_9
+
+----------------------------------------------------------------------------
+
+  In this directory you find some script to run GRAZING_9 for some specific
+  task:
+
+  -  fus_com     to calculate a fusion excitation function
+  -  bd_com      to calculate a barrier distribution
+  -  nipb_wil    to calculate wilshinski plots for a given N and z
+
+  Before using them they must be modifyed to satisfy the local setting.
+
+
+  NB. Before running the scripts (they use default parameters) it
+      is reccomended to run first the program in the interacticve mode to
+      familiarize with the kind of input and the different options the 
+      program offers to overule the default parameters.
+
+----------------------------------------------------------------------------  
+
+ In the same directory you find also a file .inp
+
+  pg_fus.inp
+
+ that you may use to plot the fusion excitation function and the barrier
+ distribution you calculated with the scripts above. This command file
+ is for the plotting program GZP2, provided in the same distribution, that
+ is based on the PGPLOT library.
+
+----------------------------------------------------------------------------  

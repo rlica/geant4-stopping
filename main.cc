@@ -14,7 +14,7 @@
 #include "G4EmParameters.hh"
 #include "G4HadronicProcessStore.hh"
 
-// Run with: razvan@Legion:~/geant4-tests/geant4-stopping/build$ make clean && make && ./stopping ../run.mac
+// Run with: ./run_docker.sh all reactions/o18_si30_2n/macros/si30_backing.mac
 
 // Custom minimal physics list for low-energy EM interactions only
 class MinimalPhysicsList : public G4VModularPhysicsList {

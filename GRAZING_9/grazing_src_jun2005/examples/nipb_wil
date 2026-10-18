@@ -1,0 +1,39 @@
+#!/bin/csh
+cd /home/nanni/grazing/examples
+/home/nanni/grazing/grazing_9 << fine
+OK
+   28   62  82  206
+c
+D
+7 7
+N
+no
+   2
+   0.00000
+ 342.
+OK
+4
+yes
+0.2
+0 0
+cm
+4
+yes
+no
+no
+no
+1
+1 0
+1.5 -20.
+sr
+no
+no
+fine
+#
+mv fort.77      wil_332.dat
+mv fort.81  wil_+1n_332.dat
+mv fort.96  ang_+1n_342.dat
+mv fort.95 tkel_+1n_342.dat
+#
+
+

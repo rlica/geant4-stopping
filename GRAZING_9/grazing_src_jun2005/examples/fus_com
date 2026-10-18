@@ -1,0 +1,21 @@
+#!/bin/csh
+cd /home/nanni/grazing/nini
+/home/nanni/grazing/old/grazing_9 << fine
+OK
+ 28 58 28 60 
+s    
+no   
+   1 
+94
+   1      
+yes       
+2 120
+600
+cm
+0 0
+no      
+no 
+fine
+#
+mv fort.22 f_58ni60ni_010.datnew
+#

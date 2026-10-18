@@ -1,0 +1,66 @@
+----------------------------------------------------------------------------
+  This file contain few instructions how to get grazing_9 working.
+
+  This distribution has been tested to run both on LINUX (redhat 6.2) 
+  and on ALPHA (TRHU64-UNIX). The program need the NAG library (Mark 18)
+----------------------------------------------------------------------------
+
+  Copy the .gz file in the directory you want to place grazing_9. Then
+  isuue the following command to unzip and untat the file:
+
+  >gunzip grazing.tar.gz
+  >tar xvf grazing.tar .
+
+  After these operations you have a new directory grazing that contains all
+  the relevant files for grazing_9 and three (3) subdirectories of grazing:
+
+   grazing/doc      contains some documentation about the program
+   grazing/pg       contains the plotting program gzp2. You may find it 
+                    usefull, otherwise just discart it.
+   grazing/examples contains few scripts for running grazing_9. There is 
+                    also e file .inp for plotting with gzp2.
+
+  Now follows these steps to satisfy the local setting and the architecture
+  you are interested in:
+
+  LINUX - ALPHA
+
+  1 - grazing_file.icl
+      modify the file  
+      according to you local setting (use the full path name). The files 
+      referred  contain informations about exces masses of the nuclei and 
+      the energy and strenght of the low lying states
+
+  2 - makefile
+      modify the file to satisfy your local setting for the NAG library
+      and other global definitions like compiler and the use of other
+      routines. Notise that thiese corrections appear at the beginning of
+      the file and at the end.
+
+  3 - issue the command 
+      >make
+      If everithing is correct you should have the file grazing_9 that
+      contains the executable.
+
+  4 - Make sure you have insolled on your machine the graphical PGPLOT 
+      library. Go to the subdirectory pg. Modify the script flpg to satisfy 
+      yout local setting and then issue the command:
+       >flpg gzp2
+      You should have the plotting program gzp2
+
+  5 - Go to the subdirectory examples, modify the file bd_com and fus_com
+      to satisfy your local setting
+
+  6 - Execute both script. You should have two new files .dat containing the
+      fusion cross sections and the barrier distribution
+
+  7 - issue the following command
+      >../pg/gzp2
+      pg_fus.inp
+      /XWINDOW
+      a new window should appear on the screen with the plotting of the
+      excitation function and the barrier distribution you just calculated 
+      with the previous command. To close the window just pres a <CRT> 
+      from the command screen. If you feel sustosfied with gzp2 you may learn
+      more about it from the page: http:/www.to.infn.it/nanni/gzp2.html.
+-------------------------------------------------------------------------------

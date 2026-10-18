@@ -36,15 +36,20 @@ void PrimaryGeneratorAction::DefineCommands() {
     fMessenger->DeclareProperty("recoilA", fRecoilA, "Recoil Mass Number");
     fMessenger->DeclareProperty("ejectileZ", fEjectileZ, "Ejectile Atomic Number");
     fMessenger->DeclareProperty("ejectileA", fEjectileA, "Ejectile Mass Number");
+    fMessenger->DeclarePropertyWithUnit("excitationEnergy", "MeV", fExcitationEnergy,
+        "Excitation energy E* (MeV) of the recoil fragment used in the Q-value.");
     fMessenger->DeclareProperty("thetaMin", fThetaMin, "Min CM angle of ejectile (deg)");
     fMessenger->DeclareProperty("thetaMax", fThetaMax, "Max CM angle of ejectile (deg)");
     fMessenger->DeclareProperty("thinTarget", fIsThinTarget, "Set to true to neglect beam energy loss and interact at the surface.");
 }
 
 void PrimaryGeneratorAction::LoadCrossSectionData() {
-    std::ifstream file("../cross_sections_18O_30Si_2n_Estar_5p5_6p5.txt");
+    // Reaction input files are resolved relative to the working directory,
+    // i.e. reactions/<case>/outputs/ when run through run_docker.sh.
+    std::ifstream file("../cross_sections.txt");
     if (!file.is_open()) {
-        G4cerr << "WARNING: Failed to open ../cross_sections_18O_30Si_2n_Estar_5p5_6p5.txt" << G4endl;
+        G4cerr << "WARNING: Failed to open ../cross_sections.txt"
+               << " (thick-target runs will fall back to thinTarget=true)" << G4endl;
         return;
     }
     std::string line;
@@ -250,6 +255,20 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
         fGeometrySyncDone = true;
     }
 
+    // Cross-section fallback: in thick-target mode the energy-dependent
+    // cross sections (../cross_sections.txt) weight the interaction depth.
+    // Without them the depth sampling is meaningless, so fall back to
+    // thin-target mode (reaction at the target surface) instead.
+    if (!fIsThinTarget && fEnergyData.empty()) {
+        if (!fCrossSectionWarned) {
+            G4Exception("PrimaryGeneratorAction", "XSEC_FALLBACK", JustWarning,
+                "../cross_sections.txt missing or empty: falling back to thinTarget=true "
+                "(reaction at the target surface). Provide cross_sections.txt for thick-target depth weighting.");
+            fCrossSectionWarned = true;
+        }
+        fIsThinTarget = true;
+    }
+
     if (!fIsThinTarget && !fIsInitialized) {
         InitializeSlowingDown();
     }
@@ -317,8 +336,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     G4double s = ma*ma + mA*mA + 2.0*Ea*mA;
     G4double Ecm = std::sqrt(s);
 
-    // Adjust Q-value for excitation energy (E* = 6.0 MeV)
-    G4double E_star = 6.0 * MeV;
+    // Adjust Q-value for the recoil excitation energy
+    // (per-reaction, set via /reaction/excitationEnergy; default 6.0 MeV)
+    G4double E_star = fExcitationEnergy;
     G4double mB_star = mB + E_star;
 
     // Recoil (B) CM Energy and Momentum

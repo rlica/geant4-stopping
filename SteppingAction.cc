@@ -4,6 +4,7 @@
 #include "G4SystemOfUnits.hh"
 #include "G4Exception.hh"
 #include "RunAction.hh"
+#include "PrimaryGeneratorAction.hh"
 #include "G4RunManager.hh"
 #include "G4AnalysisManager.hh"
 #include "G4LogicalVolumeStore.hh"
@@ -46,8 +47,17 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
         return;
     }
 
-    // Only the recoil of interest (default 32Si)
-    if (track->GetDefinition()->GetAtomicMass() != 32 || track->GetDefinition()->GetAtomicNumber() != 14) {
+    // Only the recoil of interest, as configured via /reaction/recoilZ|A
+    // (falls back to the 32Si default when not set).
+    static G4int recoilA = -1;
+    static G4int recoilZ = -1;
+    if (recoilA < 0) {
+        auto* pga = static_cast<const PrimaryGeneratorAction*>(
+            G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction());
+        recoilA = pga ? pga->GetRecoilA() : 32;
+        recoilZ = pga ? pga->GetRecoilZ() : 14;
+    }
+    if (track->GetDefinition()->GetAtomicMass() != recoilA || track->GetDefinition()->GetAtomicNumber() != recoilZ) {
         return;
     }
 

@@ -1,0 +1,22 @@
+auto
+    8   18   14   30      ! Z_a,A_a,Z_A,A_A 
+a       !  cannot be changed                                  
+0.0000100000000      ! overall accuracy                                    
+no      !additional output, special options, don`t change      
+   1   !inelastic options                                       
+   0.00000      ! Center of mass energy                               
+  25.00000      ! Laboratory energy                                   
+   4      ! leg,  cannot be changed                             
+   0.0000   0.0000      ! Step in E_lab and maximum(or minimum)               
+        !If you change to Step.ne.0 enter maxtime(min) here     
+lab   ! lab=lab, cm=center of mass, both=both system            
+    4  !leg4 cannot be changed!              
+yes       !wilczynski plot?                                    
+no     !additional output?                                     
+no           !additional quantities                                
+    1    ! number of selected partitions               
+  -2   0    !  selected partition: delta_N  delta_Z       
+ 1.0000*******    !energy resolution(FWHM)and cutoff in MeV               
+sr  Wilczynski plot? sterad or rad                             
+no       ! New energy                                          
+no       ! new run enters at Z_a,A_aetc                        

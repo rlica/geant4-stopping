@@ -1,0 +1,228 @@
+  This output generated on : 4-Jun-2026  at 15:07
+
+
+ This program calculates distributions in masses, charges,
+  energies and angular momenta of fragments in collisions 
+  between heavy nuclei according to a semiclassical model with
+  average parameters for formfactors, level densities, etc.
+ The trajectory is calculated using the Akyuz potential
+ Projectile charge and mass no. Za =  8 , Aa =  18
+ Target charge and mass no. ZA = 14 , AA =  30
+  Standard parameters, except accuracy
+ Overall accuracy = 0.1E-04
+  Q-value for neutron stripping =   -1.46 MeV
+  Q-value for neutron pick-up =     -6.65 MeV
+  Q-value for proton stripping =    -8.64 MeV
+  Q-value for proton pick-up =      -5.51 MeV
+ Q-values used: qns,qnp,qps,qpp =  2.598 -2.598 -1.566  1.566 MeV
+ You are neglecting giant resonances
+ Collective states for 18O  
+ Energy =  1.982 MeV   BE2 =   0.451E-02 e^2 b^2
+ Energy =  5.098 MeV   BE3 =   0.112E-02 e^2 b^3
+ Collective states for 30Si 
+ Energy =  2.236 MeV   BE2 =   0.215E-01 e^2 b^2
+ Energy =  5.448 MeV   BE3 =   0.227E-02 e^2 b^3
+
+ General information for low energy (zeta=1)
+ Height of nominal Coulomb barrier =   16.75 MeV
+ Radius of nominal Coulomb barrier =  8.94 fm
+ Critical energy =   57.50 MeV, where there is no nominal barrier
+ Corresponding critical angular momentum =   37.37 hbar
+   and critical radius =  6.99 fm
+ Sum of nuclear half-density radii =  6.17 fm
+
+
+ E_lab =   22.4  MeV
+ E_cm =   14.0 Mev
+
+   18O   + 30Si  at   22.4 Mev lab. Date: 4-Jun-2026  at 15:07
+  Q-values as difference between Fermi levels
+  General r-independent information
+ Mean field reduction factor zeta = 1.031
+  Energy below barrier
+   Turning point for central collisions = 11.50 fm
+  Excitation energy of fused system 48Ti  is  37.27 MeV
+   Threshhold for neutron evaporation =  11.63 MeV
+   Barrier for proton evaporation =  15.57 MeV
+  No classical capture at this low energy
+  Lowest capture energy =  16.48 MeV at l=0
+   with capture distance =  9.42 fm
+ Shift of radius to make capture at this energy = 0.1184 fm
+  Radius for this barrier =  9.0974 fm
+  Inverse barrier frequency =  3.0755 MeV
+
+ Total cross sections are calculated with stepwidth =0.112 fm
+ ------------------------------------------------
+ Total kinetic energy loss cross section
+  for deln =  -2 and delz =   0
+     with   1.000 MeV energy resolution (FWHM)
+ teloss MeV      sig mb/MeV   sig_appr
+   -5.3     7.7929D-09     1.6926D-11
+   -5.2     1.7020D-08     5.8210D-11
+   -5.0     3.4986D-08     1.8640D-10
+   -4.9     6.8050D-08     5.5735D-10
+   -4.7     1.2589D-07     1.5604D-09
+   -4.6     2.2257D-07     4.1025D-09
+   -4.3     6.1820D-07     2.3749D-08
+   -4.0     1.5039D-06     1.1059D-07
+   -3.7     3.2827D-06     4.2349D-07
+   -3.4     6.5463D-06     1.3615D-06
+   -2.8     2.0876D-05     8.9798D-06
+   -2.2     5.2443D-05     3.6252D-05
+   -1.6     1.0836D-04     9.9510D-05
+   -1.0     1.8926D-04     2.0129D-04
+   -0.4     2.8465D-04     3.1893D-04
+    0.2     3.7338D-04     4.1446D-04
+    0.8     4.3108D-04     4.5763D-04
+    1.4     4.4091D-04     4.4117D-04
+    2.6     3.2655D-04     2.9585D-04
+    3.8     1.5570D-04     1.4144D-04
+    5.0     4.8579D-05     5.2292D-05
+    6.2     1.0035D-05     1.5810D-05
+    7.4     1.3860D-06     4.0683D-06
+    8.6     1.2934D-07     9.1752D-07
+    9.8     8.2577D-09     1.8544D-07
+ Total cross section =   1.9262D-03 mb
+ Angular distribution integrated over energy loss > -15.0
+  for the partition ideln =  -2 and idelz =   0
+     theta_lab    dsig_lab/dO (mb/sr)
+        41.00             1.628E-07
+        42.00             3.658E-07
+        43.00             7.637E-07
+        44.00             1.440E-06
+        45.00             2.437E-06
+        46.00             3.725E-06
+        47.00             5.197E-06
+        48.00             6.728E-06
+        49.00             8.247E-06
+        50.00             9.779E-06
+        51.00             1.143E-05
+        52.00             1.333E-05
+        53.00             1.553E-05
+        54.00             1.799E-05
+        55.00             2.058E-05
+        56.00             2.316E-05
+        57.00             2.563E-05
+        58.00             2.800E-05
+        59.00             3.030E-05
+        60.00             3.263E-05
+        61.00             3.505E-05
+        62.00             3.763E-05
+        63.00             4.050E-05
+        64.00             4.380E-05
+        65.00             4.767E-05
+        66.00             5.217E-05
+        67.00             5.726E-05
+        68.00             6.279E-05
+        69.00             6.863E-05
+        70.00             7.468E-05
+        71.00             8.093E-05
+        72.00             8.737E-05
+        73.00             9.400E-05
+        74.00             1.008E-04
+        75.00             1.078E-04
+        76.00             1.150E-04
+        77.00             1.225E-04
+        78.00             1.304E-04
+        79.00             1.389E-04
+        80.00             1.480E-04
+        81.00             1.579E-04
+        82.00             1.684E-04
+        83.00             1.790E-04
+        84.00             1.896E-04
+        85.00             1.999E-04
+        86.00             2.099E-04
+        87.00             2.195E-04
+        88.00             2.288E-04
+        89.00             2.379E-04
+        90.00             2.469E-04
+        91.00             2.555E-04
+        92.00             2.639E-04
+        93.00             2.723E-04
+        94.00             2.806E-04
+        95.00             2.887E-04
+        96.00             2.965E-04
+        97.00             3.039E-04
+        98.00             3.110E-04
+        99.00             3.175E-04
+       100.00             3.236E-04
+       101.00             3.291E-04
+       102.00             3.343E-04
+       103.00             3.390E-04
+       104.00             3.436E-04
+       105.00             3.480E-04
+       106.00             3.522E-04
+       107.00             3.563E-04
+       108.00             3.602E-04
+       109.00             3.638E-04
+       110.00             3.670E-04
+       111.00             3.699E-04
+       112.00             3.724E-04
+       113.00             3.745E-04
+       114.00             3.759E-04
+       115.00             3.766E-04
+       116.00             3.769E-04
+       117.00             3.771E-04
+       118.00             3.772E-04
+       119.00             3.772E-04
+       120.00             3.770E-04
+       121.00             3.766E-04
+       122.00             3.761E-04
+       123.00             3.754E-04
+       124.00             3.741E-04
+       125.00             3.726E-04
+       126.00             3.702E-04
+       127.00             3.669E-04
+       128.00             3.626E-04
+       129.00             3.574E-04
+       130.00             3.519E-04
+       131.00             3.469E-04
+       132.00             3.429E-04
+       133.00             3.405E-04
+       134.00             3.402E-04
+       135.00             3.414E-04
+       136.00             3.433E-04
+       137.00             3.452E-04
+       138.00             3.462E-04
+       139.00             3.445E-04
+       140.00             3.406E-04
+       141.00             3.352E-04
+       142.00             3.293E-04
+       143.00             3.224E-04
+       144.00             3.122E-04
+       145.00             2.995E-04
+       146.00             2.837E-04
+       147.00             2.634E-04
+       148.00             2.405E-04
+       149.00             2.111E-04
+       150.00             1.756E-04
+       151.00             1.364E-04
+       152.00             9.810E-05
+       153.00             6.498E-05
+       154.00             3.941E-05
+       155.00             2.180E-05
+       156.00             1.101E-05
+       157.00             5.111E-06
+       158.00             2.195E-06
+       159.00             8.656E-07
+       160.00             3.102E-07
+       161.00             9.997E-08
+       162.00             2.920E-08
+       163.00             7.768E-09
+       164.00             1.874E-09
+       165.00             4.040E-10
+       166.00             7.755E-11
+       167.00             1.321E-11
+       168.00             1.993E-12
+       169.00             2.642E-13
+       170.00             3.089E-14
+ Total cross section =   2.2604D-03 mb
+
+ Total grazing cross section =   0.2581E+01  mbarn
+ Total capture cross section =   0.5441E+00 mbarn
+ Total reaction cross section =   0.3125E+01 mbarn
+  -------------------------------------------------
+ Total kinetic energy distribution stored in 
+FOR095.DAT                              
+  ---------------------------------------------------
+ CPU time for this job was   0 min  0 sec.
