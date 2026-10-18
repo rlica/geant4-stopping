@@ -4,6 +4,14 @@ build/
 reactions/*/outputs/
 # GRAZING build artifacts
 GRAZING_9/grazing_src_jun2005/*.o
+
+# Stray simulation outputs if the executable is ever run from the repo
+# root (results belong in reactions/<case>/outputs/)
+/stopping_data_nt_RecoilData.csv
+/stopping_*_histogram.*
+/*_histogram.txt
+/angular_distribution.*
+/18O_energy_vs_depth.txt
 # Python
 __pycache__/
 *.pyc
