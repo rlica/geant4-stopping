@@ -47,6 +47,7 @@ if [ $# -eq 0 ]; then
     echo "Usage: ./run_docker.sh [command] [options]"
     echo ""
     echo "Commands:"
+    echo "  <macro>           Run the full workflow (compile -> simulate -> plot) with the given macro"
     echo "  all [macro]       Build, run simulation, and plot"
     echo "  compile           Compile the C++ simulation"
     echo "  run [macro]       Run the simulation with specified macro"
@@ -75,6 +76,14 @@ if [ $# -eq 0 ]; then
 else
     ACTION="$1"
     shift
+fi
+
+# Convenience: passing a macro path directly (e.g.
+# ./run_docker.sh reactions/o18_si30_2n/macros/ta_backing.mac)
+# runs the full workflow (compile -> simulate -> plot) with it.
+if [[ "$ACTION" == *.mac ]]; then
+    set -- "$ACTION" "$@"
+    ACTION="all"
 fi
 
 # Run the container as the host user so files it creates in the bind mount

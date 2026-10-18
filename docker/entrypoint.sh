@@ -27,6 +27,14 @@ fi
 
 COMMAND="$1"
 
+# Convenience: passing a macro path directly (e.g. when invoking the
+# container manually) runs the full workflow with it instead of trying
+# to execute the macro file as a command.
+if [[ "$COMMAND" == *.mac ]]; then
+    set -- "$COMMAND" "${@:2}"
+    COMMAND="all"
+fi
+
 # Helper: resolve the reaction case directory from a macro path like
 # reactions/<case>/macros/<name>.mac (empty when not a case macro).
 resolve_case_dir() {
