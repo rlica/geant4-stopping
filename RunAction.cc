@@ -13,6 +13,9 @@
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
 #include "G4Box.hh"
+#include <ctime>
+#include <fstream>
+#include <sstream>
 
 RunAction::RunAction() : G4UserRunAction() {
     G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
@@ -114,32 +117,35 @@ void RunAction::EndOfRunAction(const G4Run* run) {
         }
         const G4bool thinTarget = pga && pga->IsThinTarget();
 
-        G4cout << "\n=============================================" << G4endl;
-        G4cout << "               Run Summary                   " << G4endl;
-        G4cout << "=============================================" << G4endl;
-        G4cout << " Primary Particle:       " << particleName << G4endl;
-        G4cout << " Beam Energy:            " << particleEnergy / MeV << " MeV" << G4endl;
-        G4cout << " Target Material:        " << materialName << G4endl;
+        std::ostringstream oss;
+        const std::time_t now = std::time(nullptr);
+        oss << "\n=============================================\n";
+        oss << "               Run Summary                   \n";
+        oss << "=============================================\n";
+        oss << " Run finished:           " << std::ctime(&now); // ctime() appends '\n'
+        oss << " Primary Particle:       " << particleName << "\n";
+        oss << " Beam Energy:            " << particleEnergy / MeV << " MeV\n";
+        oss << " Target Material:        " << materialName << "\n";
         if (density > 0) {
-            G4cout << " Target Density:         " << density / (g/cm3) << " g/cm3" << G4endl;
+            oss << " Target Density:         " << density / (g/cm3) << " g/cm3\n";
         }
-        G4cout << " Stopping Mode:          " << (thinTarget
+        oss << " Stopping Mode:          " << (thinTarget
             ? "thin target (simulated layer acts as stopper/backing)"
-            : "thick target (target is also the stopping medium)") << G4endl;
-        G4cout << " Stopper Material:       " << materialName << G4endl;
+            : "thick target (target is also the stopping medium)") << "\n";
+        oss << " Stopper Material:       " << materialName << "\n";
         if (density > 0) {
-            G4cout << " Stopper Density:        " << density / (g/cm3) << " g/cm3" << G4endl;
+            oss << " Stopper Density:        " << density / (g/cm3) << " g/cm3\n";
         }
         if (thickness > 0) {
             const G4double thicknessUm = thickness / um;
-            G4cout << " Stopper Thickness:      " << thicknessUm << " um" << G4endl;
+            oss << " Stopper Thickness:      " << thicknessUm << " um\n";
             if (density > 0) {
                 // areal density [mg/cm2] = rho [g/cm3] * t [um] / 10
-                G4cout << " Stopper Areal Density:  "
-                       << (density / (g/cm3)) * thicknessUm / 10.0 << " mg/cm2" << G4endl;
+                oss << " Stopper Areal Density:  "
+                       << (density / (g/cm3)) * thicknessUm / 10.0 << " mg/cm2\n";
             }
         }
-        G4cout << " Total number of events: " << run->GetNumberOfEvent() << G4endl;
+        oss << " Total number of events: " << run->GetNumberOfEvent() << "\n";
 
         if (count > 0) {
             G4double sum = fSumTime.GetValue();
@@ -155,13 +161,13 @@ void RunAction::EndOfRunAction(const G4Run* run) {
             G4double meanInteractionDepth = fSumInteractionDepth.GetValue() / count;
             G4double meanStoppingDepth = fSumStoppingDepth.GetValue() / count;
 
-            G4cout << " Particles stopped:      " << count << G4endl;
-            G4cout << " Avg Recoil Init Energy: " << meanEnergy / MeV << " MeV" << G4endl;
-            G4cout << " Avg Interaction Depth:  " << meanInteractionDepth / um << " um" << G4endl;
-            G4cout << " Avg Stopping Depth:     " << meanStoppingDepth / um << " um" << G4endl;
-            G4cout << " Average stopping time:  " << mean / ps << " ps" << G4endl;
-            G4cout << " Standard Deviation:     " << stdDev / ps << " ps" << G4endl;
-            G4cout << " Error Bar (Std Error):  " << stdErr / ps << " ps" << G4endl;
+            oss << " Particles stopped:      " << count << "\n";
+            oss << " Avg Recoil Init Energy: " << meanEnergy / MeV << " MeV\n";
+            oss << " Avg Interaction Depth:  " << meanInteractionDepth / um << " um\n";
+            oss << " Avg Stopping Depth:     " << meanStoppingDepth / um << " um\n";
+            oss << " Average stopping time:  " << mean / ps << " ps\n";
+            oss << " Standard Deviation:     " << stdDev / ps << " ps\n";
+            oss << " Error Bar (Std Error):  " << stdErr / ps << " ps\n";
         }
 
         if (nForward > 0) {
@@ -179,17 +185,27 @@ void RunAction::EndOfRunAction(const G4Run* run) {
             const G4double meanInitBeta = fSumTInitBeta.GetValue() / n;
             const G4double meanExitBeta = fSumTExitBeta.GetValue() / n;
 
-            G4cout << " Particles transmitted:  " << n << " of " << total << " (forward exits)";
+            oss << " Particles transmitted:  " << n << " of " << total << " (forward exits)";
             if (nBack > 0) {
-                G4cout << ", " << nBack << " (backward exits)";
+                oss << ", " << nBack << " (backward exits)";
             }
-            G4cout << G4endl;
-            G4cout << " Avg Recoil Energy before medium: " << meanInitE / MeV << " MeV  (v/c = " << meanInitBeta << ")" << G4endl;
-            G4cout << " Avg Recoil Energy after medium:  " << meanExitE / MeV << " MeV  (v/c = " << meanExitBeta << ")" << G4endl;
-            G4cout << " Avg Recoil Energy Loss:          " << (meanInitE - meanExitE) / MeV << " MeV" << G4endl;
-            G4cout << " StdDev Recoil Energy after:      " << std::sqrt(varExitE) / MeV << " MeV" << G4endl;
-            G4cout << " StdErr Recoil Energy after:      " << std::sqrt(varExitE / n) / MeV << " MeV" << G4endl;
+            oss << "\n";
+            oss << " Avg Recoil Energy before medium: " << meanInitE / MeV << " MeV  (v/c = " << meanInitBeta << ")\n";
+            oss << " Avg Recoil Energy after medium:  " << meanExitE / MeV << " MeV  (v/c = " << meanExitBeta << ")\n";
+            oss << " Avg Recoil Energy Loss:          " << (meanInitE - meanExitE) / MeV << " MeV\n";
+            oss << " StdDev Recoil Energy after:      " << std::sqrt(varExitE) / MeV << " MeV\n";
+            oss << " StdErr Recoil Energy after:      " << std::sqrt(varExitE / n) / MeV << " MeV\n";
         }
-        G4cout << "=============================================\n" << G4endl;
+        oss << "=============================================\n";
+
+        // Print to stdout and save next to the CSV (the current working
+        // directory, i.e. the per-macro outputs folder for runner-script runs).
+        G4cout << oss.str() << G4endl;
+        std::ofstream summaryFile("run_summary.txt");
+        if (summaryFile) {
+            summaryFile << oss.str();
+        } else {
+            G4cout << "WARNING: could not write run_summary.txt in the current directory." << G4endl;
+        }
     }
 }
