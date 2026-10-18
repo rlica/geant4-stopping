@@ -76,7 +76,13 @@ and the CSV/plots land next to it:
 ```bash
 mkdir -p reactions/o18_si30_2n/outputs
 cd reactions/o18_si30_2n/outputs
-../../build/stopping ../macros/si30_backing.mac
+../../../build/stopping ../macros/si30_backing.mac
+python3 ../../../plot_histogram.py o18_si30_2n   # optional: (re)generate plots
+```
+Or simply use the helper script from the repository root, which resolves
+the paths for you:
+```bash
+./run_geant4_stopping.sh reactions/o18_si30_2n/macros/si30_backing.mac
 ```
 If run without arguments, the simulation will execute 10 test events:
 ```bash
