@@ -3,6 +3,10 @@ build/
 # Per-reaction simulation outputs (CSV, plots) regenerated on each run;
 # outputs_<macro>/ is the per-macro directory written by the runner scripts
 reactions/*/outputs*/
+
+# Windows NTFS alternate-data-stream markers created when files are copied
+# from/to Windows (e.g. via WSL interop)
+*:Zone.Identifier
 # GRAZING build artifacts
 GRAZING_9/grazing_src_jun2005/*.o
 

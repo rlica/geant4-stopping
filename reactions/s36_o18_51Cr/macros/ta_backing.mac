@@ -1,0 +1,41 @@
+# Macro file for geant4-stopping
+# Reaction: 36S + 18O -> 51Cr + 3n (fusion-evaporation, inverse kinematics)
+#
+# The 36S beam fuses with the 18O target into the 54Cr* compound nucleus
+# (Z=24, A=54), which evaporates three neutrons, leaving the 51Cr recoil
+# (Z=24, A=51). The 3n channel conserves both A and Z (54 = 51 + 3).
+#
+# NOTE (inverse kinematics): the heavy fusion product 51Cr is the "recoil"
+# whose stopping is simulated. In this two-body approximation the three
+# evaporated neutrons are modeled as a single ejectile cluster with the
+# summed charge and mass: Z=0, A=3.
+#
+# TODO: provide angular_distribution.txt and cross_sections.txt in this
+# folder (see the other cases' README.md), and set /reaction/excitationEnergy
+# to the E* window used in the fusion-evaporation calculation.
+
+# 1. Target backing (tantalum); adjust per backing
+/detector/targetMaterial G4_Ta
+/detector/targetArealDensity 3 mg/cm2
+
+/run/initialize
+
+# 2. Thin-target mode: reaction occurs at the target surface
+/reaction/thinTarget true
+
+# Reaction kinematics
+/reaction/targetZ 8      # 18O target
+/reaction/targetA 18
+/reaction/recoilZ 24     # 51Cr fusion-evaporation residue
+/reaction/recoilA 51
+/reaction/ejectileZ 0    # evaporated 3n cluster (two-body approximation)
+/reaction/ejectileA 3
+/reaction/excitationEnergy 2 MeV   # TODO: match the E* window of the calculation
+
+/gun/particle ion
+/gun/ion 16 36           # 36S beam
+# Set beam energy
+/gun/energy 64 MeV
+
+# Set the number of events to simulate
+/run/beamOn 10000
