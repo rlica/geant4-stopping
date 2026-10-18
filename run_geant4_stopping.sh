@@ -1,7 +1,15 @@
 #!/bin/bash
 
-# Source Geant4 environment
-source /home/razvan/geant4-v11.4.1-install/bin/geant4.sh
+# Source Geant4 environment. Override the install location with
+# GEANT4_INSTALL=/path/to/geant4-install if yours lives elsewhere.
+G4ENV="${GEANT4_INSTALL:-$HOME/geant4/geant4-v11.4.3-install}"
+if [ -f "$G4ENV/bin/geant4.sh" ]; then
+    source "$G4ENV/bin/geant4.sh"
+else
+    echo "ERROR: Geant4 environment not found at: $G4ENV/bin/geant4.sh" >&2
+    echo "Install it with ./install_geant4.sh, or point GEANT4_INSTALL at your existing install." >&2
+    exit 1
+fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
