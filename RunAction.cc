@@ -26,6 +26,8 @@ RunAction::RunAction() : G4UserRunAction() {
     accumulableManager->RegisterAccumulable(fSumInteractionDepth);
     accumulableManager->RegisterAccumulable(fSumStoppingDepth);
     accumulableManager->RegisterAccumulable(fStopCount);
+    accumulableManager->RegisterAccumulable(fRecoilCount);
+    accumulableManager->RegisterAccumulable(fSumAllInitE);
     accumulableManager->RegisterAccumulable(fTransmitCount);
     accumulableManager->RegisterAccumulable(fBackCount);
     accumulableManager->RegisterAccumulable(fSumTInitE);
@@ -63,6 +65,11 @@ void RunAction::AddStoppingData(G4double time, G4double initialEnergy, G4double 
     fSumInteractionDepth += interactionDepth;
     fSumStoppingDepth += stoppingDepth;
     fStopCount += 1;
+}
+
+void RunAction::AddRecoilCreated(G4double initEnergy) {
+    fRecoilCount += 1;
+    fSumAllInitE += initEnergy;
 }
 
 void RunAction::AddExitData(G4double initEnergy, G4double initBeta, G4double exitEnergy, G4double exitBeta, G4bool forward) {
@@ -161,6 +168,11 @@ void RunAction::EndOfRunAction(const G4Run* run) {
             }
         }
         oss << " Total number of events: " << run->GetNumberOfEvent() << "\n";
+        if (fRecoilCount.GetValue() > 0) {
+            oss << " Particles created:      " << fRecoilCount.GetValue() << "\n";
+            oss << " Avg Init Energy (all):  "
+                << fSumAllInitE.GetValue() / fRecoilCount.GetValue() / MeV << " MeV\n";
+        }
 
         if (count > 0) {
             G4double sum = fSumTime.GetValue();
@@ -177,7 +189,7 @@ void RunAction::EndOfRunAction(const G4Run* run) {
             G4double meanStoppingDepth = fSumStoppingDepth.GetValue() / count;
 
             oss << " Particles stopped:      " << count << "\n";
-            oss << " Avg Recoil Init Energy: " << meanEnergy / MeV << " MeV\n";
+            oss << " Avg Init E (stopped):   " << meanEnergy / MeV << " MeV\n";
             oss << " Avg Interaction Depth:  " << meanInteractionDepth / um << " um\n";
             oss << " Avg Stopping Depth:     " << meanStoppingDepth / um << " um\n";
             oss << " Average stopping time:  " << mean / ps << " ps\n";
@@ -205,11 +217,11 @@ void RunAction::EndOfRunAction(const G4Run* run) {
                 oss << ", " << nBack << " (backward exits)";
             }
             oss << "\n";
-            oss << " Avg Recoil Energy before medium: " << meanInitE / MeV << " MeV  (v/c = " << meanInitBeta << ")\n";
-            oss << " Avg Recoil Energy after medium:  " << meanExitE / MeV << " MeV  (v/c = " << meanExitBeta << ")\n";
-            oss << " Avg Recoil Energy Loss:          " << (meanInitE - meanExitE) / MeV << " MeV\n";
-            oss << " StdDev Recoil Energy after:      " << std::sqrt(varExitE) / MeV << " MeV\n";
-            oss << " StdErr Recoil Energy after:      " << std::sqrt(varExitE / n) / MeV << " MeV\n";
+            oss << " Avg E before medium (transm.):    " << meanInitE / MeV << " MeV  (v/c = " << meanInitBeta << ")\n";
+            oss << " Avg E after medium (transm.):     " << meanExitE / MeV << " MeV  (v/c = " << meanExitBeta << ")\n";
+            oss << " Avg Energy Loss (transm.):        " << (meanInitE - meanExitE) / MeV << " MeV\n";
+            oss << " StdDev E after medium (transm.):  " << std::sqrt(varExitE) / MeV << " MeV\n";
+            oss << " StdErr E after medium (transm.):  " << std::sqrt(varExitE / n) / MeV << " MeV\n";
         }
         oss << "=============================================\n";
 

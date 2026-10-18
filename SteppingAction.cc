@@ -68,6 +68,10 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
     if (inTarget && track->GetCurrentStepNumber() == 1) {
         fRecoilInitEnergy = step->GetPreStepPoint()->GetKineticEnergy();
         fRecoilInitBeta = step->GetPreStepPoint()->GetVelocity() / CLHEP::c_light;
+        RunAction* runAction = (RunAction*)G4RunManager::GetRunManager()->GetUserRunAction();
+        if (runAction) {
+            runAction->AddRecoilCreated(fRecoilInitEnergy);
+        }
     }
 
     const G4StepPoint* postPoint = step->GetPostStepPoint();
@@ -148,6 +152,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
 
         RunAction* runAction = (RunAction*)G4RunManager::GetRunManager()->GetUserRunAction();
         if (runAction) {
+            runAction->AddRecoilCreated(std::fabs(exitEnergy));
             runAction->AddExitData(std::fabs(exitEnergy), std::fabs(exitBeta), exitEnergy, exitBeta, forward);
         }
 

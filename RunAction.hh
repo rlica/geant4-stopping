@@ -17,6 +17,9 @@ public:
 
     void AddStoppingData(G4double time, G4double initialEnergy, G4double interactionDepth, G4double stoppingDepth);
 
+    // Record the creation of a recoil (every event, unbiased population).
+    void AddRecoilCreated(G4double initEnergy);
+
     // Record a recoil that exits the target (thin-target case).
     // exitEnergy/exitBeta are signed: positive = forward exit, negative = backward exit.
     // Only forward exits enter the transmitted averages.
@@ -29,6 +32,10 @@ private:
     G4Accumulable<G4double> fSumInteractionDepth = 0.;
     G4Accumulable<G4double> fSumStoppingDepth = 0.;
     G4Accumulable<G4int> fStopCount = 0;
+
+    // All created recoils (unbiased, before any stopped/transmitted selection)
+    G4Accumulable<G4int> fRecoilCount = 0;
+    G4Accumulable<G4double> fSumAllInitE = 0.;
 
     // Transmitted-recoil statistics (forward exits only, except the counters)
     G4Accumulable<G4int> fTransmitCount = 0;
