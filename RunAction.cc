@@ -13,6 +13,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
 #include "G4Box.hh"
+#include "G4IonTable.hh"
 #include <ctime>
 #include <fstream>
 #include <sstream>
@@ -117,6 +118,15 @@ void RunAction::EndOfRunAction(const G4Run* run) {
         }
         const G4bool thinTarget = pga && pga->IsThinTarget();
 
+        // Reaction target as defined in the kinematics (targetZ/targetA).
+        // In thin-target mode it is not simulated as a material; in
+        // thick-target mode the simulated layer is the target itself.
+        G4String reactionTargetName = "Unknown";
+        if (pga) {
+            auto* targetIon = G4IonTable::GetIonTable()->GetIon(pga->GetTargetZ(), pga->GetTargetA(), 0.0);
+            if (targetIon) reactionTargetName = targetIon->GetParticleName();
+        }
+
         std::ostringstream oss;
         const std::time_t now = std::time(nullptr);
         oss << "\n=============================================\n";
@@ -125,10 +135,15 @@ void RunAction::EndOfRunAction(const G4Run* run) {
         oss << " Run finished:           " << std::ctime(&now); // ctime() appends '\n'
         oss << " Primary Particle:       " << particleName << "\n";
         oss << " Beam Energy:            " << particleEnergy / MeV << " MeV\n";
-        oss << " Target Material:        " << materialName << "\n";
-        if (density > 0) {
-            oss << " Target Density:         " << density / (g/cm3) << " g/cm3\n";
+        oss << " Reaction Target:        " << reactionTargetName
+            << " (Z=" << (pga ? pga->GetTargetZ() : 0)
+            << ", A=" << (pga ? pga->GetTargetA() : 0) << ")";
+        if (pga) {
+            oss << (thinTarget
+                ? " - not simulated (reaction at the target surface)"
+                : " - simulated (also the stopping medium)");
         }
+        oss << "\n";
         oss << " Stopping Mode:          " << (thinTarget
             ? "thin target (simulated layer acts as stopper/backing)"
             : "thick target (target is also the stopping medium)") << "\n";

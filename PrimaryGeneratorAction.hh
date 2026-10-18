@@ -20,6 +20,9 @@ public:
 
     G4bool IsThinTarget() const { return fIsThinTarget; }
 
+    G4int GetTargetZ() const { return fTargetZ; }
+    G4int GetTargetA() const { return fTargetA; }
+
     G4int GetRecoilZ() const { return fRecoilZ; }
     G4int GetRecoilA() const { return fRecoilA; }
 
