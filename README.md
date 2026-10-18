@@ -50,6 +50,13 @@ No local installation of Geant4 or compilation tools is required, and **no image
 
 #### Prerequisites
 - **Geant4** (version 11.x or similar) with appropriate physics datasets.
+  To bootstrap a complete Geant4 installation from source (build + physics
+  data), simply run:
+  ```bash
+  ./install_geant4.sh
+  ```
+  This installs Geant4 11.4.3 (the same version pinned in the Docker image)
+  under `~/geant4/` — see `./install_geant4.sh --help` for options.
 - **CMake** (version 3.16 or higher).
 - **Python 3** with `matplotlib` and `pandas` (for plotting results).
 
