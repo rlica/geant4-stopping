@@ -17,7 +17,9 @@ beam impinges on the light 18O target, and the 38S recoil is tracked.
 - `angular_distribution.txt` - CM dSigma/dOmega from the new fresco run.
 - `cross_sections.txt` - energy-dependent total cross section.
 - `macros/` - one macro per target backing, e.g. `ta_backing.mac`.
-- `outputs/` - CSV and plots produced by the simulation (gitignored).
+- `outputs_<macro-name>/` - one directory per macro (e.g.
+  `outputs_ta_backing/`) with the CSV and plots produced by that run
+  (gitignored), so different backings never overwrite each other.
 
 ## Run
 
@@ -32,13 +34,15 @@ executable (see the main README, "Option B: Native Build"). Source your
 Geant4 environment first if needed (e.g.
 `source <geant4-install>/bin/geant4.sh`).
 
-The simulation must run **inside this case's `outputs/` directory**, so
+The simulation must run **inside this case's `outputs_<macro-name>/`
+directory** (e.g. `outputs_ta_backing/` for `ta_backing.mac`), so
 the reaction inputs are found one level up (`../angular_distribution.txt`,
-`../cross_sections.txt`) and the CSV/plots are written next to them:
+`../cross_sections.txt`), the CSV/plots are written next to them, and
+different macros never overwrite each other's results:
 
     cd reactions/s36_o18_2n
-    mkdir -p outputs
-    cd outputs
+    mkdir -p outputs_ta_backing
+    cd outputs_ta_backing
     ../../../build/stopping ../macros/ta_backing.mac
 
 Optionally regenerate the histograms/plots from the same directory:

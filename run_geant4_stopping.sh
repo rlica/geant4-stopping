@@ -56,12 +56,14 @@ cmake -DCMAKE_BUILD_RPATH="$G4ENV/lib" -DCMAKE_INSTALL_RPATH="$G4ENV/lib" \
     -DCMAKE_EXE_LINKER_FLAGS="-Wl,--disable-new-dtags" "$SCRIPT_DIR"
 make -j"$(nproc 2>/dev/null || echo 4)"
 
-# Run the simulation inside the case's outputs/ directory so inputs
-# (../angular_distribution.txt, ../cross_sections.txt) and outputs (CSV,
-# plots) stay per reaction case.
+# Run the simulation inside a per-macro outputs directory
+# (outputs_<macro-stem>) so different macros for the same reaction never
+# overwrite each other's results. Reaction inputs are still found one
+# level up (../angular_distribution.txt, ../cross_sections.txt).
 CASE_DIR="$(dirname "$(dirname "$MACRO")")"        # reactions/<case>
-mkdir -p "$CASE_DIR/outputs"
-cd "$CASE_DIR/outputs"
+OUT_DIR="$CASE_DIR/outputs_$(basename "$MACRO" .mac)"
+mkdir -p "$OUT_DIR"
+cd "$OUT_DIR"
 "$SCRIPT_DIR/build/stopping" "../macros/$(basename "$MACRO")"
 
 # Generate histograms and plots

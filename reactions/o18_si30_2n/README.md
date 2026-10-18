@@ -15,7 +15,9 @@ case live in `Frescox/si30-o18-2n/` (per-energy subfolders E22..E26).
   - `ta_backing.mac` - tantalum backing
   - `si30_backing.mac` - 30Si powder
   - `ti46_backing.mac` - 46Ti backing
-- `outputs/` - CSV and plots produced by the simulation (gitignored).
+- `outputs_<macro-name>/` - one directory per macro (e.g.
+  `outputs_si30_backing/`) with the CSV and plots produced by that run
+  (gitignored), so different backings never overwrite each other.
 
 ## Run
 
@@ -30,13 +32,15 @@ executable (see the main README, "Option B: Native Build"). Source your
 Geant4 environment first if needed (e.g.
 `source <geant4-install>/bin/geant4.sh`).
 
-The simulation must run **inside this case's `outputs/` directory**, so
+The simulation must run **inside this case's `outputs_<macro-name>/`
+directory** (e.g. `outputs_si30_backing/` for `si30_backing.mac`), so
 the reaction inputs are found one level up (`../angular_distribution.txt`,
-`../cross_sections.txt`) and the CSV/plots are written next to them:
+`../cross_sections.txt`), the CSV/plots are written next to them, and
+different macros never overwrite each other's results:
 
     cd reactions/o18_si30_2n
-    mkdir -p outputs
-    cd outputs
+    mkdir -p outputs_si30_backing
+    cd outputs_si30_backing
     ../../../build/stopping ../macros/si30_backing.mac
 
 Optionally regenerate the histograms/plots from the same directory:

@@ -37,6 +37,10 @@ No local installation of Geant4 or compilation tools is required, and **no image
 
 #### Troubleshooting Docker runs
 
+- **Runner behavior doesn't match `docker/entrypoint.sh`:** the entrypoint is baked into the image at build time (it is not re-read from the bind mount on each run). If you change `docker/entrypoint.sh` or `docker/Dockerfile`, rebuild the image once:
+   ```bash
+   ./run_docker.sh build-image
+   ```
 - **`./run_docker.sh compile` fails with `Could NOT find ZLIB` / `Could NOT find EXPAT`** (or any CMake configure error) right after cloning or updating the repo: your cached local `geant4-stopping:latest` image was built from an older Dockerfile and is stale. Rebuild it once and retry:
    ```bash
    ./run_docker.sh build-image
@@ -78,11 +82,13 @@ make -j4
 
 ### Running the Simulation
 Execute the simulation by providing a macro file. For reaction cases, run
-from the case's `outputs/` directory so the inputs are found one level up
-and the CSV/plots land next to it:
+from a per-macro outputs directory (`outputs_<macro-name>/`) inside the
+case folder so the inputs are found one level up, the CSV/plots land next
+to them, and different macros for the same reaction never overwrite each
+other's results:
 ```bash
-mkdir -p reactions/o18_si30_2n/outputs
-cd reactions/o18_si30_2n/outputs
+mkdir -p reactions/o18_si30_2n/outputs_si30_backing
+cd reactions/o18_si30_2n/outputs_si30_backing
 ../../../build/stopping ../macros/si30_backing.mac
 python3 ../../../plot_histogram.py o18_si30_2n   # optional: (re)generate plots
 ```
@@ -153,15 +159,17 @@ reactions/
 │   ├── angular_distribution_fresco.txt# raw FRESCO output
 │   ├── cross_sections.txt             # total xsec (mb) vs beam energy (MeV)
 │   ├── macros/           # one macro per target backing (Ta, 30Si, 46Ti, ...)
-│   └── outputs/          # CSV + plots per backing (gitignored, regenerated)
+│   └── outputs_<macro>/   # one outputs_<macro-name>/ dir per backing:
+│                          # CSV + plots (gitignored, regenerated)
 └── s36_o18_2n/           # 36S + 18O -> 38S + 16O (inverse kinematics)
     └── ...               # same structure
 ```
 
 - To **switch reaction/backing**, just pass a different macro:
   `./run_docker.sh all reactions/s36_o18_2n/macros/ta_backing.mac`.
-  The simulation runs inside `reactions/<case>/outputs/`, so each case's
-  CSV (`stopping_data_nt_RecoilData.csv`) and plots never mix.
+  The simulation runs inside `reactions/<case>/outputs_<macro-name>/`, so
+  each macro's CSV (`stopping_data_nt_RecoilData.csv`) and plots never mix —
+  running different macros for the same reaction keeps all results.
 - To **add a new reaction**: create `reactions/<new-case>/` with
   `angular_distribution.txt`, `cross_sections.txt`, and one macro per
   target backing (see the existing cases and their READMEs). The physics
@@ -221,7 +229,7 @@ codes kept in this repository, one folder each:
    `./run_docker.sh all reactions/<case>/macros/<backing>.mac`.
 
 ### Required Input Data Files
-The primary generator relies on external ASCII data files to accurately sample reaction probabilities and kinematics. They are resolved **relative to the working directory of the simulation**, i.e. one level above `outputs/` inside the case folder (the `../` below):
+The primary generator relies on external ASCII data files to accurately sample reaction probabilities and kinematics. They are resolved **relative to the working directory of the simulation**, i.e. one level above the per-macro outputs directory (`outputs_<macro-name>/`) inside the case folder (the `../` below):
 - `angular_distribution.txt`: Contains Center-of-Mass differential cross-sections ($d\sigma/d\Omega$) versus the scattering angle $\theta$ (in degrees). Often imported from FRESCO/DWBA outputs.
 - `cross_sections.txt`: Total cross-section data (in mb) versus beam energy (in MeV). This is vital for correctly weighting the interaction probability at different depths as the beam loses energy in a thick target.
 

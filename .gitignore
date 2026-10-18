@@ -1,7 +1,8 @@
 # CMake/build artifacts (regenerated inside the container by ./run_docker.sh)
 build/
-# Per-reaction simulation outputs (CSV, plots) regenerated on each run
-reactions/*/outputs/
+# Per-reaction simulation outputs (CSV, plots) regenerated on each run;
+# outputs_<macro>/ is the per-macro directory written by the runner scripts
+reactions/*/outputs*/
 # GRAZING build artifacts
 GRAZING_9/grazing_src_jun2005/*.o
 
